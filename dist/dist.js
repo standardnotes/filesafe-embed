@@ -15163,26 +15163,161 @@ function () {
       return uploadFile;
     }()
   }, {
+    key: "encryptAndUploadJavaScriptFileObject",
+    value: function () {
+      var _encryptAndUploadJavaScriptFileObject = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee4(file) {
+        var _this2 = this;
+
+        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                return _context4.abrupt("return", new Promise(function (resolve, reject) {
+                  var reader = new FileReader();
+
+                  reader.onload =
+                  /*#__PURE__*/
+                  function () {
+                    var _ref2 = _asyncToGenerator(
+                    /*#__PURE__*/
+                    regeneratorRuntime.mark(function _callee3(e) {
+                      var data, arrayBuffer, base64Data, result;
+                      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+                        while (1) {
+                          switch (_context3.prev = _context3.next) {
+                            case 0:
+                              data = e.target.result;
+                              arrayBuffer = data;
+                              _context3.next = 4;
+                              return SFJS.crypto.arrayBufferToBase64(arrayBuffer);
+
+                            case 4:
+                              base64Data = _context3.sent;
+                              _context3.next = 7;
+                              return _this2.encryptAndUploadData(base64Data, file.name, file.type);
+
+                            case 7:
+                              result = _context3.sent;
+                              resolve(result);
+
+                            case 9:
+                            case "end":
+                              return _context3.stop();
+                          }
+                        }
+                      }, _callee3);
+                    }));
+
+                    return function (_x8) {
+                      return _ref2.apply(this, arguments);
+                    };
+                  }();
+
+                  reader.readAsArrayBuffer(file);
+                }));
+
+              case 1:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }));
+
+      function encryptAndUploadJavaScriptFileObject(_x7) {
+        return _encryptAndUploadJavaScriptFileObject.apply(this, arguments);
+      }
+
+      return encryptAndUploadJavaScriptFileObject;
+    }()
+  }, {
+    key: "encryptAndUploadData",
+    value: function () {
+      var _encryptAndUploadData = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee6(base64Data, inputFileName, fileType) {
+        var _this3 = this;
+
+        var credential;
+        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                credential = this.getDefaultCredentials();
+                return _context6.abrupt("return", this.encryptFile({
+                  data: base64Data,
+                  inputFileName: inputFileName,
+                  fileType: fileType,
+                  credential: credential
+                }).then(
+                /*#__PURE__*/
+                function () {
+                  var _ref3 = _asyncToGenerator(
+                  /*#__PURE__*/
+                  regeneratorRuntime.mark(function _callee5(itemParams) {
+                    return regeneratorRuntime.wrap(function _callee5$(_context5) {
+                      while (1) {
+                        switch (_context5.prev = _context5.next) {
+                          case 0:
+                            return _context5.abrupt("return", _this3.uploadFile({
+                              itemParams: itemParams,
+                              inputFileName: inputFileName,
+                              fileType: fileType,
+                              credential: credential
+                            })["catch"](function (uploadError) {
+                              console.error("filesafe-js | error uploading file:", uploadError);
+                            }));
+
+                          case 1:
+                          case "end":
+                            return _context5.stop();
+                        }
+                      }
+                    }, _callee5);
+                  }));
+
+                  return function (_x12) {
+                    return _ref3.apply(this, arguments);
+                  };
+                }()));
+
+              case 2:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6, this);
+      }));
+
+      function encryptAndUploadData(_x9, _x10, _x11) {
+        return _encryptAndUploadData.apply(this, arguments);
+      }
+
+      return encryptAndUploadData;
+    }()
+  }, {
     key: "downloadFileFromDescriptor",
     value: function () {
       var _downloadFileFromDescriptor = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee3(fileDescriptor) {
-        return regeneratorRuntime.wrap(function _callee3$(_context3) {
+      regeneratorRuntime.mark(function _callee7(fileDescriptor) {
+        return regeneratorRuntime.wrap(function _callee7$(_context7) {
           while (1) {
-            switch (_context3.prev = _context3.next) {
+            switch (_context7.prev = _context7.next) {
               case 0:
-                return _context3.abrupt("return", this.fileManager.downloadFileFromDescriptor(fileDescriptor));
+                return _context7.abrupt("return", this.fileManager.downloadFileFromDescriptor(fileDescriptor));
 
               case 1:
               case "end":
-                return _context3.stop();
+                return _context7.stop();
             }
           }
-        }, _callee3, this);
+        }, _callee7, this);
       }));
 
-      function downloadFileFromDescriptor(_x7) {
+      function downloadFileFromDescriptor(_x13) {
         return _downloadFileFromDescriptor.apply(this, arguments);
       }
 
@@ -15193,22 +15328,22 @@ function () {
     value: function () {
       var _encryptFile = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4(data, inputFileName, fileType, credential) {
-        return regeneratorRuntime.wrap(function _callee4$(_context4) {
+      regeneratorRuntime.mark(function _callee8(data, inputFileName, fileType, credential) {
+        return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
-            switch (_context4.prev = _context4.next) {
+            switch (_context8.prev = _context8.next) {
               case 0:
-                return _context4.abrupt("return", this.fileManager.encryptFile(data, inputFileName, fileType, credential));
+                return _context8.abrupt("return", this.fileManager.encryptFile(data, inputFileName, fileType, credential));
 
               case 1:
               case "end":
-                return _context4.stop();
+                return _context8.stop();
             }
           }
-        }, _callee4, this);
+        }, _callee8, this);
       }));
 
-      function encryptFile(_x8, _x9, _x10, _x11) {
+      function encryptFile(_x14, _x15, _x16, _x17) {
         return _encryptFile.apply(this, arguments);
       }
 
@@ -15224,27 +15359,27 @@ function () {
     value: function () {
       var _decryptFile = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee5(_ref2) {
+      regeneratorRuntime.mark(function _callee9(_ref4) {
         var fileDescriptor, fileItem, credential;
-        return regeneratorRuntime.wrap(function _callee5$(_context5) {
+        return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
-            switch (_context5.prev = _context5.next) {
+            switch (_context9.prev = _context9.next) {
               case 0:
-                fileDescriptor = _ref2.fileDescriptor, fileItem = _ref2.fileItem, credential = _ref2.credential;
-                return _context5.abrupt("return", this.fileManager.decryptFile({
+                fileDescriptor = _ref4.fileDescriptor, fileItem = _ref4.fileItem, credential = _ref4.credential;
+                return _context9.abrupt("return", this.fileManager.decryptFile({
                   fileDescriptor: fileDescriptor,
                   fileItem: fileItem
                 }));
 
               case 2:
               case "end":
-                return _context5.stop();
+                return _context9.stop();
             }
           }
-        }, _callee5, this);
+        }, _callee9, this);
       }));
 
-      function decryptFile(_x12) {
+      function decryptFile(_x18) {
         return _decryptFile.apply(this, arguments);
       }
 
@@ -15252,17 +15387,17 @@ function () {
     }()
   }, {
     key: "downloadBase64Data",
-    value: function downloadBase64Data(_ref3) {
-      var base64Data = _ref3.base64Data,
-          fileName = _ref3.fileName,
-          fileType = _ref3.fileType;
+    value: function downloadBase64Data(_ref5) {
+      var base64Data = _ref5.base64Data,
+          fileName = _ref5.fileName,
+          fileType = _ref5.fileType;
       __WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].downloadData(__WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].base64toBinary(base64Data), fileName, fileType);
     }
   }, {
     key: "createTemporaryFileUrl",
-    value: function createTemporaryFileUrl(_ref4) {
-      var base64Data = _ref4.base64Data,
-          dataType = _ref4.dataType;
+    value: function createTemporaryFileUrl(_ref6) {
+      var base64Data = _ref6.base64Data,
+          dataType = _ref6.dataType;
       return __WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].tempUrlForData(__WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].base64toBinary(base64Data), dataType);
     }
     /* Credentials */
@@ -15272,19 +15407,19 @@ function () {
     value: function () {
       var _createNewCredentials = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee6() {
-        return regeneratorRuntime.wrap(function _callee6$(_context6) {
+      regeneratorRuntime.mark(function _callee10() {
+        return regeneratorRuntime.wrap(function _callee10$(_context10) {
           while (1) {
-            switch (_context6.prev = _context6.next) {
+            switch (_context10.prev = _context10.next) {
               case 0:
-                return _context6.abrupt("return", this.credentialManager.createNewCredentials());
+                return _context10.abrupt("return", this.credentialManager.createNewCredentials());
 
               case 1:
               case "end":
-                return _context6.stop();
+                return _context10.stop();
             }
           }
-        }, _callee6, this);
+        }, _callee10, this);
       }));
 
       function createNewCredentials() {
@@ -17533,7 +17668,6 @@ function () {
                     fileDescriptor.addItemAsRelationship(credential);
 
                     _this2.extensionBridge.createItem(fileDescriptor, function (createdItems) {
-                      console.log("Created items", createdItems);
                       resolve(createdItems[0]);
                     });
                   });
