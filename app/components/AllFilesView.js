@@ -6,9 +6,9 @@ export default class AllFilesView extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {files: FilesafeManager.get().filesafe.getAllFileDescriptors() || []};
+    this.state = {expanded: true, files: FilesafeManager.get().filesafe.getAllFileDescriptors() || []};
 
-    FilesafeManager.get().filesafe.addDataChangeObserver(() => {
+    FilesafeManager.get().addDataChangeObserver(() => {
       this.setState({files: FilesafeManager.get().filesafe.getAllFileDescriptors()})
     });
   }

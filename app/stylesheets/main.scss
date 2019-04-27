@@ -1,7 +1,11 @@
 @import '~stylekit';
 
 #filesafe-embed {
+  font-size: var(--sn-stylekit-base-font-size);
+  line-height: 1;
+
   .sn-component {
+    font-size: var(--sn-stylekit-base-font-size) !important;
     user-select: auto !important;
 
     .sk-panel .sk-panel-content {
@@ -94,6 +98,15 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+
+      .sk-segmented-buttons {
+        margin-right: 5px;
+
+        .sk-button {
+          border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important;
+          border-right: 1px solid var(--sn-stylekit-info-contrast-color) !important;
+        }
+      }
 
       .sk-button {
         border: none;

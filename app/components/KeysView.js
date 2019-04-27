@@ -8,7 +8,7 @@ export default class KeysView extends React.Component {
 
     this.state = {credentials: FilesafeManager.get().filesafe.getAllCredentials() || []};
 
-    FilesafeManager.get().filesafe.addDataChangeObserver(() => {
+    FilesafeManager.get().addDataChangeObserver(() => {
       this.setState({credentials: FilesafeManager.get().filesafe.getAllCredentials()});
     })
   }

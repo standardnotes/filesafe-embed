@@ -14,9 +14,14 @@ export default class FilesView extends React.Component {
     return FilesafeManager.get().filesafe.downloadFileFromDescriptor(fileDescriptor).then((item) => {
       this.setState({status: "Decrypting..."});
       return FilesafeManager.get().filesafe.decryptFile({fileDescriptor: fileDescriptor, fileItem: item}).then((data) => {
-        FilesafeManager.get().filesafe.downloadBase64Data(data.decryptedData, metadata.content.fileName, metadata.content.fileType);
+        FilesafeManager.get().filesafe.downloadBase64Data({
+          base64Data: data.decryptedData,
+          fileName: fileDescriptor.content.fileName,
+          fileType: fileDescriptor.content.fileType
+        });
         this.setState({status: null, selectedFile: null});
       }).catch((decryptionError) => {
+        console.error("filesafe-embed | error decrypting file:", decryptionError);
         this.flashError("Error decrypting file.");
       })
     }).catch((downloadError) => {
@@ -46,6 +51,15 @@ export default class FilesView extends React.Component {
     FilesafeManager.get().filesafe.deleteFileFromDescriptor(fileDescriptor);
   }
 
+  copyInsertionLink = (fileDescriptor) => {
+    let text = `[FileSafe:${fileDescriptor.uuid}:${fileDescriptor.content.fileName}]`;
+    FilesafeManager.get().filesafe.copyTextToClipboard(text);
+    this.setState({copiedLink: fileDescriptor});
+    setTimeout(() => {
+      this.setState({copiedLink: null});
+    }, 1000);
+  }
+
   isFileSelected = (metadata) => {
     return this.state.selectedFile == metadata;
   }
@@ -53,7 +67,7 @@ export default class FilesView extends React.Component {
   elementForFile = (file) => {
     return (
       <div className="sk-segmented-buttons">
-        <div onClick={(event) => {this.selectFile(event, file)}} className={"file sk-button info " + (this.isFileSelected(file) ? "selected border-color" : undefined)}>
+        <div onClick={(event) => {this.selectFile(event, file)}} className={"file sk-button info " + (this.isFileSelected(file) ? "selected" : undefined)}>
           <div className="sk-label">
             {file.content.fileName}
           </div>
@@ -61,11 +75,15 @@ export default class FilesView extends React.Component {
 
         {this.isFileSelected(file) &&
           [
-            <div onClick={() => {this.downloadFile(file)}} className="sk-button info no-border">
+            <div onClick={() => {this.downloadFile(file)}} className="sk-button info">
               <div className="sk-label">Download</div>
             </div>,
 
-            <div onClick={() => {this.deleteFile(file)}} className="sk-button danger no-border">
+            <div onClick={() => {this.copyInsertionLink(file)}} className="sk-button info">
+              <div className="sk-label">{this.state.copiedLink == file ? "Copied" : "Copy Insert Link"}</div>
+            </div>,
+
+            <div onClick={() => {this.deleteFile(file)}} className="sk-button danger">
               <div className="sk-label">Delete</div>
             </div>
           ]
@@ -95,6 +113,7 @@ export default class FilesView extends React.Component {
     if(fileElements.length > 0) {
       elements = elements.concat(fileElements);
     }
+
     return elements;
   }
 }

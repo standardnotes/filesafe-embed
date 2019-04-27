@@ -91,30 +91,105 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var FilesafeManager =
 /*#__PURE__*/
 function () {
-  function FilesafeManager() {
-    _classCallCheck(this, FilesafeManager);
-  }
-
-  _createClass(FilesafeManager, [{
-    key: "setFilesafeInstance",
-    value: function setFilesafeInstance(filesafe) {
-      this.filesafe = filesafe;
-    }
-  }, {
-    key: "defaultRelayServerUrl",
-    value: function defaultRelayServerUrl() {
-      return window.default_relay_server_url;
-    }
-  }], [{
+  _createClass(FilesafeManager, null, [{
     key: "get",
 
-    /* Singleton */
+    /*
+      Singleton. `instance` is nulled in the unload function.
+     */
     value: function get() {
       if (this.instance == null) {
         this.instance = new FilesafeManager();
       }
 
       return this.instance;
+    }
+  }]);
+
+  function FilesafeManager() {
+    _classCallCheck(this, FilesafeManager);
+
+    this.unloadHandlers = [];
+    this.dataChangeObservers = [];
+  }
+
+  _createClass(FilesafeManager, [{
+    key: "setFilesafeInstance",
+    value: function setFilesafeInstance(filesafe) {
+      var _this = this;
+
+      this.filesafe = filesafe;
+      this.fsObserver = filesafe.addDataChangeObserver(function () {
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = _this.dataChangeObservers[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var observer = _step.value;
+            observer();
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator["return"] != null) {
+              _iterator["return"]();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+      });
+    }
+  }, {
+    key: "addDataChangeObserver",
+    value: function addDataChangeObserver(observer) {
+      this.dataChangeObservers.push(observer);
+    }
+  }, {
+    key: "addUnloadHandler",
+    value: function addUnloadHandler(handler) {
+      this.unloadHandlers.push(handler);
+    }
+  }, {
+    key: "unload",
+    value: function unload() {
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = this.unloadHandlers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var handler = _step2.value;
+          handler();
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
+            _iterator2["return"]();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      this.dataChangeObservers = [];
+      this.filesafe.removeDataChangeObserver(this.fsObserver);
+      FilesafeManager.instance = null;
+    }
+  }, {
+    key: "defaultRelayServerUrl",
+    value: function defaultRelayServerUrl() {
+      return window.default_relay_server_url;
     }
   }]);
 
@@ -202,13 +277,19 @@ function (_React$Component) {
                     fileDescriptor: fileDescriptor,
                     fileItem: item
                   }).then(function (data) {
-                    __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.downloadBase64Data(data.decryptedData, metadata.content.fileName, metadata.content.fileType);
+                    __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.downloadBase64Data({
+                      base64Data: data.decryptedData,
+                      fileName: fileDescriptor.content.fileName,
+                      fileType: fileDescriptor.content.fileType
+                    });
 
                     _this.setState({
                       status: null,
                       selectedFile: null
                     });
                   })["catch"](function (decryptionError) {
+                    console.error("filesafe-embed | error decrypting file:", decryptionError);
+
                     _this.flashError("Error decrypting file.");
                   });
                 })["catch"](function (downloadError) {
@@ -249,6 +330,21 @@ function (_React$Component) {
       __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.deleteFileFromDescriptor(fileDescriptor);
     });
 
+    _defineProperty(_assertThisInitialized(_this), "copyInsertionLink", function (fileDescriptor) {
+      var text = "[FileSafe:".concat(fileDescriptor.uuid, ":").concat(fileDescriptor.content.fileName, "]");
+      __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.copyTextToClipboard(text);
+
+      _this.setState({
+        copiedLink: fileDescriptor
+      });
+
+      setTimeout(function () {
+        _this.setState({
+          copiedLink: null
+        });
+      }, 1000);
+    });
+
     _defineProperty(_assertThisInitialized(_this), "isFileSelected", function (metadata) {
       return _this.state.selectedFile == metadata;
     });
@@ -260,21 +356,28 @@ function (_React$Component) {
         onClick: function onClick(event) {
           _this.selectFile(event, file);
         },
-        className: "file sk-button info " + (_this.isFileSelected(file) ? "selected border-color" : undefined)
+        className: "file sk-button info " + (_this.isFileSelected(file) ? "selected" : undefined)
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-label"
       }, file.content.fileName)), _this.isFileSelected(file) && [__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         onClick: function onClick() {
           _this.downloadFile(file);
         },
-        className: "sk-button info no-border"
+        className: "sk-button info"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-label"
       }, "Download")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         onClick: function onClick() {
+          _this.copyInsertionLink(file);
+        },
+        className: "sk-button info"
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "sk-label"
+      }, _this.state.copiedLink == file ? "Copied" : "Copy Insert Link")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        onClick: function onClick() {
           _this.deleteFile(file);
         },
-        className: "sk-button danger no-border"
+        className: "sk-button danger"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-label"
       }, "Delete"))]);
@@ -399,9 +502,18 @@ function (_React$Component) {
 
   _createClass(FilesafeEmbed, null, [{
     key: "renderInElement",
+    // Called by consumer
     value: function renderInElement(element, filesafe) {
       __WEBPACK_IMPORTED_MODULE_3__lib_FilesafeManager__["a" /* default */].get().setFilesafeInstance(filesafe);
       __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.render(__WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(FilesafeEmbed), element);
+    } // Called by consumer. Required if embed will appear and disappear multiple times
+    // This function will clean up window observers
+
+  }, {
+    key: "unload",
+    value: function unload(element) {
+      __WEBPACK_IMPORTED_MODULE_3__lib_FilesafeManager__["a" /* default */].get().unload();
+      __WEBPACK_IMPORTED_MODULE_1_react_dom___default.a.unmountComponentAtNode(element);
     }
   }]);
 
@@ -479,39 +591,10 @@ function (_React$Component) {
     _this.state = {
       messages: []
     };
-    __WEBPACK_IMPORTED_MODULE_5__lib_FilesafeManager__["a" /* default */].get().filesafe.addDataChangeObserver(function () {
-      var platform = __WEBPACK_IMPORTED_MODULE_5__lib_FilesafeManager__["a" /* default */].get().filesafe.getPlatform();
-
-      if (_this.state.platform != platform) {
-        _this.setState({
-          platform: platform
-        });
-
-        _this.applyPlatformClass();
-      }
-    });
     return _this;
   }
 
   _createClass(Root, [{
-    key: "applyPlatformClass",
-    value: function applyPlatformClass() {
-      document.querySelector("html").classList.add(this.state.platform);
-      this.reloadScrollBars();
-    }
-  }, {
-    key: "reloadScrollBars",
-    value: function reloadScrollBars() {
-      // For some reason, scrollbars don't update when the className for this.state.platform is set dynamically.
-      // We're doing everything right, but on Chrome Windows, the scrollbars don't reload if adding className after
-      // the page already loaded. So this seems to work in manually reloading.
-      var container = document.querySelector("body");
-      container.style.display = "none";
-      setTimeout(function () {
-        container.style.display = "block";
-      }, 0);
-    }
-  }, {
     key: "render",
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -615,7 +698,7 @@ function (_React$Component) {
     _this.state = {
       credentials: __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.getAllCredentials() || []
     };
-    __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.addDataChangeObserver(function () {
+    __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().addDataChangeObserver(function () {
       _this.setState({
         credentials: __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.getAllCredentials()
       });
@@ -15368,7 +15451,8 @@ function () {
                 fileDescriptor = _ref4.fileDescriptor, fileItem = _ref4.fileItem, credential = _ref4.credential;
                 return _context9.abrupt("return", this.fileManager.decryptFile({
                   fileDescriptor: fileDescriptor,
-                  fileItem: fileItem
+                  fileItem: fileItem,
+                  credential: credential
                 }));
 
               case 2:
@@ -15503,6 +15587,11 @@ function () {
     key: "getPlatform",
     value: function getPlatform() {
       return this.extensionBridge.getPlatform();
+    }
+  }, {
+    key: "copyTextToClipboard",
+    value: function copyTextToClipboard(text) {
+      return __WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].copyTextToClipboard(text);
     }
   }]);
 
@@ -17904,6 +17993,30 @@ function () {
         type: fileType ? fileType : 'text/json'
       }));
     }
+  }, {
+    key: "copyTextToClipboard",
+    value: function copyTextToClipboard(text) {
+      if (window.clipboardData && window.clipboardData.setData) {
+        // IE specific code path to prevent textarea being shown while dialog is visible.
+        return clipboardData.setData("Text", text);
+      } else if (document.queryCommandSupported && document.queryCommandSupported("copy")) {
+        var textarea = document.createElement("textarea");
+        textarea.textContent = text;
+        textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
+
+        document.body.appendChild(textarea);
+        textarea.select();
+
+        try {
+          return document.execCommand("copy"); // Security exception may be thrown by some browsers.
+        } catch (ex) {
+          console.warn("Copy to clipboard failed.", ex);
+          return false;
+        } finally {
+          document.body.removeChild(textarea);
+        }
+      }
+    }
   }]);
 
   return Utils;
@@ -17968,6 +18081,36 @@ function (_React$Component) {
     _classCallCheck(this, UploadFilesView);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(UploadFilesView).call(this, props));
+
+    _defineProperty(_assertThisInitialized(_this), "event_preventDefaults", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "event_highlight", function (e) {
+      _this.event_preventDefaults(e);
+
+      document.body.classList.add('highlight');
+      document.body.classList.add('border-color');
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "event_unhighlight", function (e) {
+      _this.event_preventDefaults(e);
+
+      document.body.classList.remove('highlight');
+      document.body.classList.remove('border-color');
+    });
+
+    _defineProperty(_assertThisInitialized(_this), "event_drop", function (e) {
+      _this.event_unhighlight(e);
+
+      _this.event_preventDefaults(e);
+
+      var dt = e.dataTransfer;
+      var files = dt.files;
+
+      _this.handleDroppedFiles(files);
+    });
 
     _defineProperty(_assertThisInitialized(_this), "handleDroppedFiles",
     /*#__PURE__*/
@@ -18081,8 +18224,14 @@ function (_React$Component) {
       credentialManager: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.credentialManager,
       integrationManager: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.integrationManager
     });
-    __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.addDataChangeObserver(function () {
+    __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().addDataChangeObserver(function () {
       _this.reload();
+    });
+    __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().addUnloadHandler(function () {
+      window.removeEventListener('dragenter', _this.event_highlight, false);
+      window.removeEventListener('dragover', _this.event_highlight, false);
+      window.removeEventListener('dragleave', _this.event_unhighlight, false);
+      window.removeEventListener('drop', _this.event_drop, false);
     });
     return _this;
   }
@@ -18124,56 +18273,16 @@ function (_React$Component) {
   }, {
     key: "componentDidMount",
     value: function componentDidMount() {
-      var _this2 = this;
-
       this.configureFileForm();
-      var body = document.getElementsByTagName('body')[0];
-      ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(function (eventName) {
-        window.addEventListener(eventName, preventDefaults, false);
-      });
-
-      function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-
-      var highlight = function highlight(e) {
-        body.classList.add('highlight');
-        body.classList.add('border-color');
-      };
-
-      var unhighlight = function unhighlight(e) {
-        body.classList.remove('highlight');
-        body.classList.remove('border-color');
-      };
-
-      ['dragenter', 'dragover'].forEach(function (eventName) {
-        window.addEventListener(eventName, highlight, false);
-      });
-      ['dragenter', 'dragover'].forEach(function (eventName) {
-        window.addEventListener(eventName, highlight, false);
-      });
-      ['dragleave', 'drop'].forEach(function (eventName) {
-        window.addEventListener(eventName, unhighlight, false);
-      });
-
-      var handleDrop = function handleDrop(e) {
-        var dt = e.dataTransfer;
-        var files = dt.files;
-
-        _this2.handleDroppedFiles(files);
-      };
-
-      window.addEventListener('drop', handleDrop, false);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {// TODO: Deregister window listeners
+      window.addEventListener('dragenter', this.event_highlight, false);
+      window.addEventListener('dragover', this.event_highlight, false);
+      window.addEventListener('dragleave', this.event_unhighlight, false);
+      window.addEventListener('drop', this.event_drop, false);
     }
   }, {
     key: "configureFileForm",
     value: function configureFileForm() {
-      var _this3 = this;
+      var _this2 = this;
 
       var fileInput = this.fileInput;
       var dropContainer = this.dropContainer;
@@ -18187,8 +18296,8 @@ function (_React$Component) {
         // Which gets called on all browsers
         var files = event.target.files;
 
-        if (!_this3.handledFiles) {
-          _this3.handleDroppedFiles(files);
+        if (!_this2.handledFiles) {
+          _this2.handleDroppedFiles(files);
         }
       };
     }
@@ -18207,7 +18316,7 @@ function (_React$Component) {
       var _readFile = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee4(file) {
-        var _this4 = this;
+        var _this3 = this;
 
         var MegabyteLimit, BytesInMegabyte, ByteLimit;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -18243,7 +18352,7 @@ function (_React$Component) {
                               data = JSON.parse(data);
                               item = data.items[0];
 
-                              _this4.decryptDraggedFile(item).then(resolve);
+                              _this3.decryptDraggedFile(item).then(resolve);
 
                               _context3.next = 20;
                               break;
@@ -18259,7 +18368,7 @@ function (_React$Component) {
 
                               alert("The maximum upload size is ".concat(MegabyteLimit, " megabytes per file."));
 
-                              _this4.setState({
+                              _this3.setState({
                                 status: null
                               });
 
@@ -18273,7 +18382,7 @@ function (_React$Component) {
                             case 16:
                               string = _context3.sent;
                               _context3.next = 19;
-                              return _this4.encryptFile(string, file.name, file.type);
+                              return _this3.encryptFile(string, file.name, file.type);
 
                             case 19:
                               resolve();
@@ -18291,7 +18400,7 @@ function (_React$Component) {
                     };
                   }();
 
-                  _this4.setState({
+                  _this3.setState({
                     status: "Reading file..."
                   });
 
@@ -18323,7 +18432,7 @@ function (_React$Component) {
       var _decryptDraggedFile = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee6(fileDescriptor) {
-        var _this5 = this;
+        var _this4 = this;
 
         var credentials, decryptWithCredential, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, credential, success;
 
@@ -18354,7 +18463,7 @@ function (_React$Component) {
                                 var item = data.decryptedItem;
                                 __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.downloadBase64Data(data.decryptedData, item.content.fileName, item.content.fileType);
 
-                                _this5.setState({
+                                _this4.setState({
                                   status: null
                                 });
 
@@ -18362,7 +18471,7 @@ function (_React$Component) {
                               })["catch"](function (decryptionError) {
                                 console.error("Error decrypting:", decryptionError);
 
-                                _this5.flashError("Error decrypting file.");
+                                _this4.flashError("Error decrypting file.");
 
                                 reject(false);
                               });
@@ -18497,7 +18606,7 @@ function (_React$Component) {
       var _encryptFile = _asyncToGenerator(
       /*#__PURE__*/
       regeneratorRuntime.mark(function _callee9(data, inputFileName, fileType) {
-        var _this6 = this;
+        var _this5 = this;
 
         var credential;
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
@@ -18523,12 +18632,12 @@ function (_React$Component) {
                       while (1) {
                         switch (_context8.prev = _context8.next) {
                           case 0:
-                            _this6.setState({
+                            _this5.setState({
                               status: "Uploading..."
                             });
 
                             _context8.next = 3;
-                            return _this6.wait(0.5);
+                            return _this5.wait(0.5);
 
                           case 3:
                             return _context8.abrupt("return", __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.uploadFile({
@@ -18537,13 +18646,13 @@ function (_React$Component) {
                               fileType: fileType,
                               credential: credential
                             }).then(function () {
-                              _this6.setState({
+                              _this5.setState({
                                 status: "Upload Success."
                               });
                             })["catch"](function (uploadError) {
                               console.error("fs-embed | error uploading file:", uploadError);
 
-                              _this6.flashError("Error uploading file.");
+                              _this5.flashError("Error uploading file.");
                             }));
 
                           case 4:
@@ -18576,14 +18685,14 @@ function (_React$Component) {
   }, {
     key: "flashError",
     value: function flashError(error) {
-      var _this7 = this;
+      var _this6 = this;
 
       this.setState({
         status: error,
         statusClass: "danger"
       });
       setTimeout(function () {
-        _this7.setState({
+        _this6.setState({
           status: null,
           statusClass: null
         });
@@ -18592,7 +18701,7 @@ function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      var _this8 = this;
+      var _this7 = this;
 
       var statusClass = this.state.statusClass ? this.state.statusClass : "info";
       var hasSpinner = statusClass == "info";
@@ -18626,7 +18735,7 @@ function (_React$Component) {
           display: "none"
         },
         onChange: function onChange(event) {
-          _this8.handleDroppedFiles(event.target.files);
+          _this7.handleDroppedFiles(event.target.files);
         }
       }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         id: "attach-file-button-label",
@@ -18856,9 +18965,10 @@ function (_React$Component) {
     });
 
     _this.state = {
+      expanded: true,
       files: __WEBPACK_IMPORTED_MODULE_2__lib_FilesafeManager__["a" /* default */].get().filesafe.getAllFileDescriptors() || []
     };
-    __WEBPACK_IMPORTED_MODULE_2__lib_FilesafeManager__["a" /* default */].get().filesafe.addDataChangeObserver(function () {
+    __WEBPACK_IMPORTED_MODULE_2__lib_FilesafeManager__["a" /* default */].get().addDataChangeObserver(function () {
       _this.setState({
         files: __WEBPACK_IMPORTED_MODULE_2__lib_FilesafeManager__["a" /* default */].get().filesafe.getAllFileDescriptors()
       });
@@ -18995,7 +19105,7 @@ function (_React$Component) {
     _this.state = {
       integrations: __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.getAllIntegrations() || []
     };
-    __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.addDataChangeObserver(function () {
+    __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().addDataChangeObserver(function () {
       _this.reloadIntegrations();
     });
     return _this;

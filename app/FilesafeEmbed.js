@@ -5,9 +5,17 @@ import FilesafeManager from "./lib/FilesafeManager"
 
 export default class FilesafeEmbed extends React.Component {
 
+  // Called by consumer
   static renderInElement(element, filesafe) {
     FilesafeManager.get().setFilesafeInstance(filesafe);
     ReactDOM.render(React.createElement(FilesafeEmbed), element);
+  }
+
+  // Called by consumer. Required if embed will appear and disappear multiple times
+  // This function will clean up window observers
+  static unload(element) {
+    FilesafeManager.get().unload();
+    ReactDOM.unmountComponentAtNode(element);
   }
 
   constructor(props) {

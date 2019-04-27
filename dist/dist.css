@@ -1,5 +1,5 @@
 :root {
-  --sn-stylekit-base-font-size: 14px;
+  --sn-stylekit-base-font-size: 13px;
   --sn-stylekit-font-size-p: 1.0rem;
   --sn-stylekit-font-size-editor: 1.21rem;
   --sn-stylekit-font-size-h6: 0.8rem;
@@ -435,6 +435,7 @@
   resize: none; }
 
 .sn-component input.sk-input.clear {
+  color: var(--sn-stylekit-foreground-color);
   background-color: transparent;
   border: none; }
 
@@ -509,7 +510,9 @@
 .sn-component .sk-segmented-buttons .sk-button, .sn-component .sk-segmented-buttons .sk-box {
   border-radius: 0;
   white-space: nowrap;
-  margin: 0; }
+  margin: 0;
+  margin-left: 0 !important;
+  margin-right: 0 !important; }
 
 .sn-component .sk-segmented-buttons .sk-button:not(:last-child), .sn-component .sk-segmented-buttons .sk-box:not(:last-child) {
   border-right: none;
@@ -1862,68 +1865,71 @@ textarea,
 
 .windows-web ::-webkit-scrollbar-corner, .windows-desktop ::-webkit-scrollbar-corner, .linux-web ::-webkit-scrollbar-corner, .linux-desktop ::-webkit-scrollbar-corner {
   background-color: transparent; }
-#filesafe-embed .sn-component {
-  user-select: auto !important; }
-  #filesafe-embed .sn-component .sk-panel .sk-panel-content {
-    padding-top: 6px !important;
-    height: inherit !important; }
-    #filesafe-embed .sn-component .sk-panel .sk-panel-content p {
-      color: inherit; }
-  #filesafe-embed .sn-component .sk-panel-section:first-child {
-    padding-bottom: 1.3rem;
-    margin-bottom: 0 !important; }
-  #filesafe-embed .sn-component .sk-panel-section:not(:first-child) {
-    padding-top: 0.7rem;
-    padding-bottom: 1.3rem;
-    margin-bottom: 0 !important; }
-  #filesafe-embed .sn-component .sk-button-group .sk-button {
-    vertical-align: middle; }
-  #filesafe-embed .sn-component .sk-button.no-border {
-    border: none; }
-  #filesafe-embed .sn-component .sk-button {
-    user-select: none; }
-  #filesafe-embed .sn-component label.no-style {
-    margin: 0;
-    font-size: inherit; }
-
-#filesafe-embed .bold {
-  font-weight: bold; }
-
-#filesafe-embed .faded {
-  opacity: 0.5; }
-
-#filesafe-embed #messages-container {
-  width: 100%;
-  margin-bottom: 14px !important; }
-
-#filesafe-embed #messages {
-  width: 100%; }
-  #filesafe-embed #messages ul {
-    margin: 0;
-    padding-left: 8px;
-    list-style-position: inside; }
-    #filesafe-embed #messages ul li {
-      line-height: 1.4; }
-
-#filesafe-embed #attach-file-button-label {
-  color: var(--sn-stylekit-info-contrast-color); }
-
-#filesafe-embed .files-view {
-  margin-top: 3px; }
-  #filesafe-embed .files-view #add-file-button-container {
-    margin-right: 18px; }
-  #filesafe-embed .files-view #file-status {
-    margin-right: 30px;
-    padding-top: 8px; }
-  #filesafe-embed .files-view .segmented-buttons {
-    margin-right: 10px; }
-  #filesafe-embed .files-view .files {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap; }
-    #filesafe-embed .files-view .files .sk-button {
-      border: none;
-      margin-bottom: 10px;
-      margin-right: 5px; }
-      #filesafe-embed .files-view .files .sk-button.selected {
-        margin-right: 0px; }
+#filesafe-embed {
+  font-size: var(--sn-stylekit-base-font-size);
+  line-height: 1; }
+  #filesafe-embed .sn-component {
+    font-size: var(--sn-stylekit-base-font-size) !important;
+    user-select: auto !important; }
+    #filesafe-embed .sn-component .sk-panel .sk-panel-content {
+      padding-top: 6px !important;
+      height: inherit !important; }
+      #filesafe-embed .sn-component .sk-panel .sk-panel-content p {
+        color: inherit; }
+    #filesafe-embed .sn-component .sk-panel-section:first-child {
+      padding-bottom: 1.3rem;
+      margin-bottom: 0 !important; }
+    #filesafe-embed .sn-component .sk-panel-section:not(:first-child) {
+      padding-top: 0.7rem;
+      padding-bottom: 1.3rem;
+      margin-bottom: 0 !important; }
+    #filesafe-embed .sn-component .sk-button-group .sk-button {
+      vertical-align: middle; }
+    #filesafe-embed .sn-component .sk-button.no-border {
+      border: none; }
+    #filesafe-embed .sn-component .sk-button {
+      user-select: none; }
+    #filesafe-embed .sn-component label.no-style {
+      margin: 0;
+      font-size: inherit; }
+  #filesafe-embed .bold {
+    font-weight: bold; }
+  #filesafe-embed .faded {
+    opacity: 0.5; }
+  #filesafe-embed #messages-container {
+    width: 100%;
+    margin-bottom: 14px !important; }
+  #filesafe-embed #messages {
+    width: 100%; }
+    #filesafe-embed #messages ul {
+      margin: 0;
+      padding-left: 8px;
+      list-style-position: inside; }
+      #filesafe-embed #messages ul li {
+        line-height: 1.4; }
+  #filesafe-embed #attach-file-button-label {
+    color: var(--sn-stylekit-info-contrast-color); }
+  #filesafe-embed .files-view {
+    margin-top: 3px; }
+    #filesafe-embed .files-view #add-file-button-container {
+      margin-right: 18px; }
+    #filesafe-embed .files-view #file-status {
+      margin-right: 30px;
+      padding-top: 8px; }
+    #filesafe-embed .files-view .segmented-buttons {
+      margin-right: 10px; }
+    #filesafe-embed .files-view .files {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap; }
+      #filesafe-embed .files-view .files .sk-segmented-buttons {
+        margin-right: 5px; }
+        #filesafe-embed .files-view .files .sk-segmented-buttons .sk-button {
+          border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important;
+          border-right: 1px solid var(--sn-stylekit-info-contrast-color) !important; }
+      #filesafe-embed .files-view .files .sk-button {
+        border: none;
+        margin-bottom: 10px;
+        margin-right: 5px; }
+        #filesafe-embed .files-view .files .sk-button.selected {
+          margin-right: 0px; }

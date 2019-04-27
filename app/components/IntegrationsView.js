@@ -10,7 +10,7 @@ export default class IntegrationsView extends React.Component {
       integrations: FilesafeManager.get().filesafe.getAllIntegrations() || []
     };
 
-    FilesafeManager.get().filesafe.addDataChangeObserver(() => {
+    FilesafeManager.get().addDataChangeObserver(() => {
       this.reloadIntegrations();
     })
   }

@@ -18,9 +18,16 @@ export default class UploadFilesView extends React.Component {
       integrationManager: FilesafeManager.get().filesafe.integrationManager
     })
 
-    FilesafeManager.get().filesafe.addDataChangeObserver(() => {
+    FilesafeManager.get().addDataChangeObserver(() => {
       this.reload();
     });
+
+    FilesafeManager.get().addUnloadHandler(() => {
+      window.removeEventListener('dragenter', this.event_highlight, false)
+      window.removeEventListener('dragover', this.event_highlight, false)
+      window.removeEventListener('dragleave', this.event_unhighlight, false)
+      window.removeEventListener('drop', this.event_drop, false)
+    })
   }
 
   async reload() {
@@ -33,51 +40,35 @@ export default class UploadFilesView extends React.Component {
   componentDidMount() {
     this.configureFileForm();
 
-    const body = document.getElementsByTagName('body')[0];
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      window.addEventListener(eventName, preventDefaults, false)
-    })
-
-    function preventDefaults (e) {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-
-    var highlight = (e) => {
-      body.classList.add('highlight');
-      body.classList.add('border-color');
-    }
-
-    var unhighlight = (e) => {
-      body.classList.remove('highlight');
-      body.classList.remove('border-color');
-    }
-
-    ['dragenter', 'dragover'].forEach((eventName) => {
-      window.addEventListener(eventName, highlight, false)
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      window.addEventListener(eventName, highlight, false)
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      window.addEventListener(eventName, unhighlight, false)
-    });
-
-    var handleDrop = (e) => {
-      let dt = e.dataTransfer;
-      let files = dt.files;
-
-      this.handleDroppedFiles(files)
-    }
-
-    window.addEventListener('drop', handleDrop, false)
+    window.addEventListener('dragenter', this.event_highlight, false)
+    window.addEventListener('dragover', this.event_highlight, false)
+    window.addEventListener('dragleave', this.event_unhighlight, false)
+    window.addEventListener('drop', this.event_drop, false)
   }
 
-  componentWillUnmount() {
-    // TODO: Deregister window listeners
+  event_preventDefaults = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+
+  event_highlight = (e) => {
+    this.event_preventDefaults(e);
+    document.body.classList.add('highlight');
+    document.body.classList.add('border-color');
+  }
+
+  event_unhighlight = (e) => {
+    this.event_preventDefaults(e);
+    document.body.classList.remove('highlight');
+    document.body.classList.remove('border-color');
+  }
+
+  event_drop = (e) => {
+    this.event_unhighlight(e);
+    this.event_preventDefaults(e);
+    let dt = e.dataTransfer;
+    let files = dt.files;
+    this.handleDroppedFiles(files)
   }
 
   get dropContainer() {
