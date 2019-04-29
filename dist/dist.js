@@ -15038,6 +15038,14 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Filesafe =
 /*#__PURE__*/
 function () {
+  _createClass(Filesafe, null, [{
+    key: "getSFItemClass",
+    // Allow consumers to construct these objects without including entire standard-file-js lib
+    value: function getSFItemClass() {
+      return __WEBPACK_IMPORTED_MODULE_6_standard_file_js__["SFItem"];
+    }
+  }]);
+
   function Filesafe(_ref) {
     var _this = this;
 
@@ -15045,8 +15053,6 @@ function () {
 
     _classCallCheck(this, Filesafe);
 
-    // Allow consumers to construct these objects
-    this.SFItem = __WEBPACK_IMPORTED_MODULE_6_standard_file_js__["SFItem"];
     this.dataChangeObservers = [];
     this.newFileDescriptorHandlers = [];
     this.extensionBridge = new __WEBPACK_IMPORTED_MODULE_0__lib_ExtensionBridge__["a" /* default */](componentManager);
@@ -15114,6 +15120,13 @@ function () {
         return candidate != observer;
       });
     }
+    /* Set current note. Used by filesafe-embed to show files for current note. */
+
+  }, {
+    key: "setCurrentNote",
+    value: function setCurrentNote(note) {
+      this.currentNote = note;
+    }
     /* Files */
 
   }, {
@@ -15125,6 +15138,11 @@ function () {
     key: "findFileDescriptor",
     value: function findFileDescriptor(uuid) {
       return this.fileManager.findFileDescriptor(uuid);
+    }
+  }, {
+    key: "fileDescriptorsForCurrentNote",
+    value: function fileDescriptorsForCurrentNote() {
+      return this.fileManager.fileDescriptorsForNote(this.currentNote);
     }
   }, {
     key: "fileDescriptorsForNote",
@@ -15167,79 +15185,86 @@ function () {
     value: function () {
       var _uploadFile = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee2(itemParams, inputFileName, fileType, credential, note) {
-        var descriptor, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, observer;
+      regeneratorRuntime.mark(function _callee2(_ref2) {
+        var fileItem, inputFileName, fileType, credential, note, descriptor, _iteratorNormalCompletion2, _didIteratorError2, _iteratorError2, _iterator2, _step2, observer;
 
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
-                return this.fileManager.uploadFile(itemParams, inputFileName, fileType, credential, note);
+                fileItem = _ref2.fileItem, inputFileName = _ref2.inputFileName, fileType = _ref2.fileType, credential = _ref2.credential, note = _ref2.note;
+                _context2.next = 3;
+                return this.fileManager.uploadFile({
+                  fileItem: fileItem,
+                  inputFileName: inputFileName,
+                  fileType: fileType,
+                  credential: credential,
+                  note: note
+                });
 
-              case 2:
+              case 3:
                 descriptor = _context2.sent;
 
                 if (!descriptor) {
-                  _context2.next = 23;
+                  _context2.next = 24;
                   break;
                 }
 
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
                 _iteratorError2 = undefined;
-                _context2.prev = 7;
+                _context2.prev = 8;
 
                 for (_iterator2 = this.newFileDescriptorHandlers[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                   observer = _step2.value;
                   observer(descriptor);
                 }
 
-                _context2.next = 15;
+                _context2.next = 16;
                 break;
 
-              case 11:
-                _context2.prev = 11;
-                _context2.t0 = _context2["catch"](7);
+              case 12:
+                _context2.prev = 12;
+                _context2.t0 = _context2["catch"](8);
                 _didIteratorError2 = true;
                 _iteratorError2 = _context2.t0;
 
-              case 15:
-                _context2.prev = 15;
+              case 16:
                 _context2.prev = 16;
+                _context2.prev = 17;
 
                 if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
                   _iterator2["return"]();
                 }
 
-              case 18:
-                _context2.prev = 18;
+              case 19:
+                _context2.prev = 19;
 
                 if (!_didIteratorError2) {
-                  _context2.next = 21;
+                  _context2.next = 22;
                   break;
                 }
 
                 throw _iteratorError2;
 
-              case 21:
-                return _context2.finish(18);
-
               case 22:
-                return _context2.finish(15);
+                return _context2.finish(19);
 
               case 23:
-                return _context2.abrupt("return", descriptor);
+                return _context2.finish(16);
 
               case 24:
+                return _context2.abrupt("return", descriptor);
+
+              case 25:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[7, 11, 15, 23], [16,, 18, 22]]);
+        }, _callee2, this, [[8, 12, 16, 24], [17,, 19, 23]]);
       }));
 
-      function uploadFile(_x2, _x3, _x4, _x5, _x6) {
+      function uploadFile(_x2) {
         return _uploadFile.apply(this, arguments);
       }
 
@@ -15250,7 +15275,7 @@ function () {
     value: function () {
       var _encryptAndUploadJavaScriptFileObject = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee4(file) {
+      regeneratorRuntime.mark(function _callee4(jsFile) {
         var _this2 = this;
 
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -15263,7 +15288,7 @@ function () {
                   reader.onload =
                   /*#__PURE__*/
                   function () {
-                    var _ref2 = _asyncToGenerator(
+                    var _ref3 = _asyncToGenerator(
                     /*#__PURE__*/
                     regeneratorRuntime.mark(function _callee3(e) {
                       var data, arrayBuffer, base64Data, result;
@@ -15279,7 +15304,11 @@ function () {
                             case 4:
                               base64Data = _context3.sent;
                               _context3.next = 7;
-                              return _this2.encryptAndUploadData(base64Data, file.name, file.type);
+                              return _this2.encryptAndUploadData({
+                                base64Data: base64Data,
+                                inputFileName: jsFile.name,
+                                fileType: jsFile.type
+                              });
 
                             case 7:
                               result = _context3.sent;
@@ -15293,12 +15322,12 @@ function () {
                       }, _callee3);
                     }));
 
-                    return function (_x8) {
-                      return _ref2.apply(this, arguments);
+                    return function (_x4) {
+                      return _ref3.apply(this, arguments);
                     };
                   }();
 
-                  reader.readAsArrayBuffer(file);
+                  reader.readAsArrayBuffer(jsFile);
                 }));
 
               case 1:
@@ -15309,7 +15338,7 @@ function () {
         }, _callee4);
       }));
 
-      function encryptAndUploadJavaScriptFileObject(_x7) {
+      function encryptAndUploadJavaScriptFileObject(_x3) {
         return _encryptAndUploadJavaScriptFileObject.apply(this, arguments);
       }
 
@@ -15320,14 +15349,15 @@ function () {
     value: function () {
       var _encryptAndUploadData = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee6(base64Data, inputFileName, fileType) {
+      regeneratorRuntime.mark(function _callee6(_ref4) {
         var _this3 = this;
 
-        var credential;
+        var base64Data, inputFileName, fileType, credential;
         return regeneratorRuntime.wrap(function _callee6$(_context6) {
           while (1) {
             switch (_context6.prev = _context6.next) {
               case 0:
+                base64Data = _ref4.base64Data, inputFileName = _ref4.inputFileName, fileType = _ref4.fileType;
                 credential = this.getDefaultCredentials();
                 return _context6.abrupt("return", this.encryptFile({
                   data: base64Data,
@@ -15337,15 +15367,15 @@ function () {
                 }).then(
                 /*#__PURE__*/
                 function () {
-                  var _ref3 = _asyncToGenerator(
+                  var _ref5 = _asyncToGenerator(
                   /*#__PURE__*/
-                  regeneratorRuntime.mark(function _callee5(itemParams) {
+                  regeneratorRuntime.mark(function _callee5(fileItem) {
                     return regeneratorRuntime.wrap(function _callee5$(_context5) {
                       while (1) {
                         switch (_context5.prev = _context5.next) {
                           case 0:
                             return _context5.abrupt("return", _this3.uploadFile({
-                              itemParams: itemParams,
+                              fileItem: fileItem,
                               inputFileName: inputFileName,
                               fileType: fileType,
                               credential: credential
@@ -15361,12 +15391,12 @@ function () {
                     }, _callee5);
                   }));
 
-                  return function (_x12) {
-                    return _ref3.apply(this, arguments);
+                  return function (_x6) {
+                    return _ref5.apply(this, arguments);
                   };
                 }()));
 
-              case 2:
+              case 3:
               case "end":
                 return _context6.stop();
             }
@@ -15374,7 +15404,7 @@ function () {
         }, _callee6, this);
       }));
 
-      function encryptAndUploadData(_x9, _x10, _x11) {
+      function encryptAndUploadData(_x5) {
         return _encryptAndUploadData.apply(this, arguments);
       }
 
@@ -15400,7 +15430,7 @@ function () {
         }, _callee7, this);
       }));
 
-      function downloadFileFromDescriptor(_x13) {
+      function downloadFileFromDescriptor(_x7) {
         return _downloadFileFromDescriptor.apply(this, arguments);
       }
 
@@ -15411,14 +15441,21 @@ function () {
     value: function () {
       var _encryptFile = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee8(data, inputFileName, fileType, credential) {
+      regeneratorRuntime.mark(function _callee8(_ref6) {
+        var data, inputFileName, fileType, credential;
         return regeneratorRuntime.wrap(function _callee8$(_context8) {
           while (1) {
             switch (_context8.prev = _context8.next) {
               case 0:
-                return _context8.abrupt("return", this.fileManager.encryptFile(data, inputFileName, fileType, credential));
+                data = _ref6.data, inputFileName = _ref6.inputFileName, fileType = _ref6.fileType, credential = _ref6.credential;
+                return _context8.abrupt("return", this.fileManager.encryptFile({
+                  data: data,
+                  inputFileName: inputFileName,
+                  fileType: fileType,
+                  credential: credential
+                }));
 
-              case 1:
+              case 2:
               case "end":
                 return _context8.stop();
             }
@@ -15426,7 +15463,7 @@ function () {
         }, _callee8, this);
       }));
 
-      function encryptFile(_x14, _x15, _x16, _x17) {
+      function encryptFile(_x8) {
         return _encryptFile.apply(this, arguments);
       }
 
@@ -15442,13 +15479,13 @@ function () {
     value: function () {
       var _decryptFile = _asyncToGenerator(
       /*#__PURE__*/
-      regeneratorRuntime.mark(function _callee9(_ref4) {
+      regeneratorRuntime.mark(function _callee9(_ref7) {
         var fileDescriptor, fileItem, credential;
         return regeneratorRuntime.wrap(function _callee9$(_context9) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                fileDescriptor = _ref4.fileDescriptor, fileItem = _ref4.fileItem, credential = _ref4.credential;
+                fileDescriptor = _ref7.fileDescriptor, fileItem = _ref7.fileItem, credential = _ref7.credential;
                 return _context9.abrupt("return", this.fileManager.decryptFile({
                   fileDescriptor: fileDescriptor,
                   fileItem: fileItem,
@@ -15463,7 +15500,7 @@ function () {
         }, _callee9, this);
       }));
 
-      function decryptFile(_x18) {
+      function decryptFile(_x9) {
         return _decryptFile.apply(this, arguments);
       }
 
@@ -15471,17 +15508,17 @@ function () {
     }()
   }, {
     key: "downloadBase64Data",
-    value: function downloadBase64Data(_ref5) {
-      var base64Data = _ref5.base64Data,
-          fileName = _ref5.fileName,
-          fileType = _ref5.fileType;
+    value: function downloadBase64Data(_ref8) {
+      var base64Data = _ref8.base64Data,
+          fileName = _ref8.fileName,
+          fileType = _ref8.fileType;
       __WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].downloadData(__WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].base64toBinary(base64Data), fileName, fileType);
     }
   }, {
     key: "createTemporaryFileUrl",
-    value: function createTemporaryFileUrl(_ref6) {
-      var base64Data = _ref6.base64Data,
-          dataType = _ref6.dataType;
+    value: function createTemporaryFileUrl(_ref9) {
+      var base64Data = _ref9.base64Data,
+          dataType = _ref9.dataType;
       return __WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].tempUrlForData(__WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].base64toBinary(base64Data), dataType);
     }
     /* Credentials */
@@ -17722,14 +17759,15 @@ function () {
       regeneratorRuntime.mark(function _callee2(_ref) {
         var _this2 = this;
 
-        var itemParams, inputFileName, fileType, credential, note, integration, outputFileName;
+        var fileItem, inputFileName, fileType, credential, note, integration, fileExt, outputFileName;
         return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                itemParams = _ref.itemParams, inputFileName = _ref.inputFileName, fileType = _ref.fileType, credential = _ref.credential, note = _ref.note;
+                fileItem = _ref.fileItem, inputFileName = _ref.inputFileName, fileType = _ref.fileType, credential = _ref.credential, note = _ref.note;
                 integration = this.integrationManager.getDefaultUploadSource();
-                outputFileName = "".concat(inputFileName, ".sf.json");
+                fileExt = inputFileName.split(".")[1];
+                outputFileName = "".concat(fileItem.uuid, ".").concat(fileExt, ".sf.json");
                 return _context2.abrupt("return", new Promise(function (resolve, reject) {
                   var worker = new __WEBPACK_IMPORTED_MODULE_2__util_encryption_worker_js___default.a();
                   worker.addEventListener("message", function (event) {
@@ -17763,7 +17801,7 @@ function () {
                   var operation = "upload";
                   var params = {
                     outputFileName: outputFileName,
-                    itemParams: itemParams,
+                    fileItem: fileItem,
                     integration: integration,
                     operation: operation,
                     credentials: _this2.credentialManager.getDefaultCredentials()
@@ -17771,7 +17809,7 @@ function () {
                   worker.postMessage(params);
                 }));
 
-              case 4:
+              case 5:
               case "end":
                 return _context2.stop();
             }
@@ -17849,7 +17887,7 @@ function () {
                 return _context4.abrupt("return", new Promise(function (resolve, reject) {
                   var worker = new __WEBPACK_IMPORTED_MODULE_2__util_encryption_worker_js___default.a();
                   worker.addEventListener("message", function (event) {
-                    resolve(event.data.itemParams);
+                    resolve(event.data.fileItem);
                   });
                   worker.postMessage({
                     operation: "encrypt",
@@ -18090,15 +18128,13 @@ function (_React$Component) {
     _defineProperty(_assertThisInitialized(_this), "event_highlight", function (e) {
       _this.event_preventDefaults(e);
 
-      document.body.classList.add('highlight');
-      document.body.classList.add('border-color');
+      _this.rootElement.classList.add('highlight');
     });
 
     _defineProperty(_assertThisInitialized(_this), "event_unhighlight", function (e) {
       _this.event_preventDefaults(e);
 
-      document.body.classList.remove('highlight');
-      document.body.classList.remove('border-color');
+      _this.rootElement.classList.remove('highlight');
     });
 
     _defineProperty(_assertThisInitialized(_this), "event_drop", function (e) {
@@ -18218,6 +18254,7 @@ function (_React$Component) {
     }());
 
     _this.state = {
+      noteFiles: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.fileDescriptorsForCurrentNote(),
       messages: []
     };
     _this.messagesManager = new __WEBPACK_IMPORTED_MODULE_1__lib_MessagesManager__["a" /* default */]({
@@ -18253,6 +18290,7 @@ function (_React$Component) {
               case 2:
                 messages = _context2.sent;
                 this.setState({
+                  noteFiles: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.fileDescriptorsForCurrentNote(),
                   messages: messages
                 });
 
@@ -18461,7 +18499,11 @@ function (_React$Component) {
                                 credential: credential
                               }).then(function (data) {
                                 var item = data.decryptedItem;
-                                __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.downloadBase64Data(data.decryptedData, item.content.fileName, item.content.fileType);
+                                __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.downloadBase64Data({
+                                  base64Data: data.decryptedData,
+                                  fileName: item.content.fileName,
+                                  fileType: item.content.fileType
+                                });
 
                                 _this4.setState({
                                   status: null
@@ -18627,7 +18669,7 @@ function (_React$Component) {
                 function () {
                   var _ref4 = _asyncToGenerator(
                   /*#__PURE__*/
-                  regeneratorRuntime.mark(function _callee8(itemParams) {
+                  regeneratorRuntime.mark(function _callee8(fileItem) {
                     return regeneratorRuntime.wrap(function _callee8$(_context8) {
                       while (1) {
                         switch (_context8.prev = _context8.next) {
@@ -18641,7 +18683,7 @@ function (_React$Component) {
 
                           case 3:
                             return _context8.abrupt("return", __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.uploadFile({
-                              itemParams: itemParams,
+                              fileItem: fileItem,
                               inputFileName: inputFileName,
                               fileType: fileType,
                               credential: credential
@@ -18740,7 +18782,14 @@ function (_React$Component) {
       }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         id: "attach-file-button-label",
         className: "sk-label"
-      }, "Attach File")))))));
+      }, "Attach File")))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_3__FilesView__["a" /* default */], {
+        files: this.state.noteFiles
+      }))));
+    }
+  }, {
+    key: "rootElement",
+    get: function get() {
+      return document.getElementById("filesafe-embed");
     }
   }, {
     key: "dropContainer",

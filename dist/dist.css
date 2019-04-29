@@ -1868,6 +1868,8 @@ textarea,
 #filesafe-embed {
   font-size: var(--sn-stylekit-base-font-size);
   line-height: 1; }
+  #filesafe-embed.highlight {
+    border: 2px dashed var(--sn-stylekit-info-color); }
   #filesafe-embed .sn-component {
     font-size: var(--sn-stylekit-base-font-size) !important;
     user-select: auto !important; }

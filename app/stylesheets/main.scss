@@ -4,6 +4,10 @@
   font-size: var(--sn-stylekit-base-font-size);
   line-height: 1;
 
+  &.highlight {
+    border: 2px dashed var(--sn-stylekit-info-color);
+  }
+
   .sn-component {
     font-size: var(--sn-stylekit-base-font-size) !important;
     user-select: auto !important;

@@ -10,6 +10,7 @@ export default class UploadFilesView extends React.Component {
     super(props);
 
     this.state = {
+      noteFiles: FilesafeManager.get().filesafe.fileDescriptorsForCurrentNote(),
       messages: []
     };
 
@@ -33,6 +34,7 @@ export default class UploadFilesView extends React.Component {
   async reload() {
     var messages = await this.messagesManager.getMessages();
     this.setState({
+      noteFiles: FilesafeManager.get().filesafe.fileDescriptorsForCurrentNote(),
       messages: messages
     });
   }
@@ -53,14 +55,12 @@ export default class UploadFilesView extends React.Component {
 
   event_highlight = (e) => {
     this.event_preventDefaults(e);
-    document.body.classList.add('highlight');
-    document.body.classList.add('border-color');
+    this.rootElement.classList.add('highlight');
   }
 
   event_unhighlight = (e) => {
     this.event_preventDefaults(e);
-    document.body.classList.remove('highlight');
-    document.body.classList.remove('border-color');
+    this.rootElement.classList.remove('highlight');
   }
 
   event_drop = (e) => {
@@ -69,6 +69,10 @@ export default class UploadFilesView extends React.Component {
     let dt = e.dataTransfer;
     let files = dt.files;
     this.handleDroppedFiles(files)
+  }
+
+  get rootElement() {
+    return document.getElementById("filesafe-embed");
   }
 
   get dropContainer() {
@@ -170,7 +174,7 @@ export default class UploadFilesView extends React.Component {
       return new Promise((resolve, reject) => {
         FilesafeManager.get().filesafe.decryptFile({fileDescriptor, credential}).then((data) => {
           const item = data.decryptedItem;
-          FilesafeManager.get().filesafe.downloadBase64Data(data.decryptedData, item.content.fileName, item.content.fileType);
+          FilesafeManager.get().filesafe.downloadBase64Data({base64Data: data.decryptedData, fileName: item.content.fileName, fileType: item.content.fileType});
           this.setState({status: null});
           resolve(true);
         }).catch((decryptionError) => {
@@ -203,11 +207,11 @@ export default class UploadFilesView extends React.Component {
 
     const credential = FilesafeManager.get().filesafe.getDefaultCredentials();
 
-    return FilesafeManager.get().filesafe.encryptFile({data, inputFileName, fileType, credential}).then(async (itemParams) => {
+    return FilesafeManager.get().filesafe.encryptFile({data, inputFileName, fileType, credential}).then(async (fileItem) => {
       this.setState({status: "Uploading..."});
       await this.wait(0.5);
 
-      return FilesafeManager.get().filesafe.uploadFile({itemParams, inputFileName, fileType, credential}).then(() => {
+      return FilesafeManager.get().filesafe.uploadFile({fileItem, inputFileName, fileType, credential}).then(() => {
         this.setState({status: "Upload Success."});
       }).catch((uploadError) => {
         console.error("fs-embed | error uploading file:", uploadError);
@@ -256,6 +260,8 @@ export default class UploadFilesView extends React.Component {
                 </label>
               </div>
             </div>
+
+            <FilesView files={this.state.noteFiles} />
           </div>
         </div>
       </div>
