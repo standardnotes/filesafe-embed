@@ -14,9 +14,8 @@ export default class KeysView extends React.Component {
   }
 
   exportCredential = (credential) => {
-    var base64 = btoa(JSON.stringify(credential, null, 2));
-    var data = Utils.base64toBinary(base64);
-    Utils.downloadData(data, `sn-filesafe-keys-${credential.created_at.toISOString()}.json`, 'text/json');
+    var base64Data = btoa(JSON.stringify(credential, null, 2));
+    FilesafeManager.get().filesafe.downloadBase64Data({base64Data, fileName: `sn-filesafe-keys-${credential.created_at.toISOString()}.json`, fileType: 'text/json'});
   }
 
   deleteCredential = (credential) => {

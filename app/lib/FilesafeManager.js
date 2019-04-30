@@ -47,7 +47,7 @@ export default class FilesafeManager {
   }
 
   defaultRelayServerUrl() {
-    return window.default_relay_server_url;
+    return window.default_fs_relay_server_url || "https://filesafe.standardnotes.org";
   }
 
 }

@@ -66,14 +66,15 @@
   #messages {
     width: 100%;
 
-
     ul {
       margin: 0;
-      padding-left: 8px;
+      margin-top: 6px;
+      padding-left: 0px;
       list-style-position: inside;
 
       li {
         line-height: 1.4;
+        font-weight: 500;
       }
     }
   }
@@ -106,9 +107,10 @@
       .sk-segmented-buttons {
         margin-right: 5px;
 
-        .sk-button {
-          border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important;
-          border-right: 1px solid var(--sn-stylekit-info-contrast-color) !important;
+        &.expanded {
+          .sk-button:not(:first-child) {
+            border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important;
+          }
         }
       }
 

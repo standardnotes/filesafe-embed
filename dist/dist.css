@@ -1905,10 +1905,12 @@ textarea,
     width: 100%; }
     #filesafe-embed #messages ul {
       margin: 0;
-      padding-left: 8px;
+      margin-top: 6px;
+      padding-left: 0px;
       list-style-position: inside; }
       #filesafe-embed #messages ul li {
-        line-height: 1.4; }
+        line-height: 1.4;
+        font-weight: 500; }
   #filesafe-embed #attach-file-button-label {
     color: var(--sn-stylekit-info-contrast-color); }
   #filesafe-embed .files-view {
@@ -1926,9 +1928,8 @@ textarea,
       flex-wrap: wrap; }
       #filesafe-embed .files-view .files .sk-segmented-buttons {
         margin-right: 5px; }
-        #filesafe-embed .files-view .files .sk-segmented-buttons .sk-button {
-          border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important;
-          border-right: 1px solid var(--sn-stylekit-info-contrast-color) !important; }
+        #filesafe-embed .files-view .files .sk-segmented-buttons.expanded .sk-button:not(:first-child) {
+          border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important; }
       #filesafe-embed .files-view .files .sk-button {
         border: none;
         margin-bottom: 10px;

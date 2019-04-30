@@ -9,15 +9,19 @@ export default class UploadFilesView extends React.Component {
   constructor(props) {
     super(props);
 
+    this.messagesManager = new MessagesManager({
+      credentialManager: FilesafeManager.get().filesafe.credentialManager,
+      integrationManager: FilesafeManager.get().filesafe.integrationManager
+    });
+
+    this.messagesManager.getMessages().then((messages) => {
+      this.setState({messages: messages});
+    });
+
     this.state = {
       noteFiles: FilesafeManager.get().filesafe.fileDescriptorsForCurrentNote(),
       messages: []
     };
-
-    this.messagesManager = new MessagesManager({
-      credentialManager: FilesafeManager.get().filesafe.credentialManager,
-      integrationManager: FilesafeManager.get().filesafe.integrationManager
-    })
 
     FilesafeManager.get().addDataChangeObserver(() => {
       this.reload();

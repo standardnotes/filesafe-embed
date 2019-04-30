@@ -189,7 +189,7 @@ function () {
   }, {
     key: "defaultRelayServerUrl",
     value: function defaultRelayServerUrl() {
-      return window.default_relay_server_url;
+      return window.default_fs_relay_server_url || "https://filesafe.standardnotes.org";
     }
   }]);
 
@@ -351,7 +351,7 @@ function (_React$Component) {
 
     _defineProperty(_assertThisInitialized(_this), "elementForFile", function (file) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-segmented-buttons"
+        className: "sk-segmented-buttons " + (_this.isFileSelected(file) ? "expanded" : null)
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         onClick: function onClick(event) {
           _this.selectFile(event, file);
@@ -665,9 +665,12 @@ function (_React$Component) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(KeysView).call(this, props));
 
     _defineProperty(_assertThisInitialized(_this), "exportCredential", function (credential) {
-      var base64 = btoa(JSON.stringify(credential, null, 2));
-      var data = Utils.base64toBinary(base64);
-      Utils.downloadData(data, "sn-filesafe-keys-".concat(credential.created_at.toISOString(), ".json"), 'text/json');
+      var base64Data = btoa(JSON.stringify(credential, null, 2));
+      __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.downloadBase64Data({
+        base64Data: base64Data,
+        fileName: "sn-filesafe-keys-".concat(credential.created_at.toISOString(), ".json"),
+        fileType: 'text/json'
+      });
     });
 
     _defineProperty(_assertThisInitialized(_this), "deleteCredential", function (credential) {
@@ -15621,6 +15624,11 @@ function () {
     */
 
   }, {
+    key: "base64toBinary",
+    value: function base64toBinary(base64String) {
+      return __WEBPACK_IMPORTED_MODULE_5__lib_util_Utils__["a" /* default */].base64toBinary(base64String);
+    }
+  }, {
     key: "getPlatform",
     value: function getPlatform() {
       return this.extensionBridge.getPlatform();
@@ -17369,14 +17377,16 @@ function () {
   }, {
     key: "setIntegrationAsDefault",
     value: function setIntegrationAsDefault(integration) {
+      var saveItems = [integration];
       var currentDefault = this.getDefaultUploadSource();
 
       if (currentDefault) {
         currentDefault.content.isDefaultUploadSource = false;
+        saveItems.push(currentDefault);
       }
 
       integration.content.isDefaultUploadSource = true;
-      this.extensionBridge.saveItem(integration);
+      this.extensionBridge.saveItems(saveItems);
     }
   }, {
     key: "deleteIntegration",
@@ -18253,14 +18263,21 @@ function (_React$Component) {
       };
     }());
 
-    _this.state = {
-      noteFiles: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.fileDescriptorsForCurrentNote(),
-      messages: []
-    };
     _this.messagesManager = new __WEBPACK_IMPORTED_MODULE_1__lib_MessagesManager__["a" /* default */]({
       credentialManager: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.credentialManager,
       integrationManager: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.integrationManager
     });
+
+    _this.messagesManager.getMessages().then(function (messages) {
+      _this.setState({
+        messages: messages
+      });
+    });
+
+    _this.state = {
+      noteFiles: __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().filesafe.fileDescriptorsForCurrentNote(),
+      messages: []
+    };
     __WEBPACK_IMPORTED_MODULE_4__lib_FilesafeManager__["a" /* default */].get().addDataChangeObserver(function () {
       _this.reload();
     });
@@ -18863,8 +18880,8 @@ function () {
 
                 if (!credentials) {
                   messages.push({
-                    message: "No encryption keys loaded. Press Expand to generate new keys.",
-                    css: "warning"
+                    message: "Create keys by selecting <strong>Create New</strong> under <i>Keys</i>.",
+                    css: "sk-base"
                   });
                 }
 
@@ -18872,8 +18889,8 @@ function () {
 
                 if (!integrations || integrations.length == 0) {
                   messages.push({
-                    message: "No cloud integrations configured. Press Expand to set up.",
-                    css: "warning"
+                    message: "Add a new integration by selecting <strong>Add New</strong> under <i>Integrations</i>",
+                    css: "sk-base"
                   });
                 }
 
@@ -18948,10 +18965,13 @@ function (_React$Component) {
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         id: "messages"
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("ul", null, this.props.messages.map(function (message) {
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("strong", null, "Before uploading a file, you must:"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("ul", null, this.props.messages.map(function (message) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("li", {
+          dangerouslySetInnerHTML: {
+            __html: message.message
+          },
           className: message.css
-        }, message.message);
+        });
       })));
     }
   }]);

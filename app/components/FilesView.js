@@ -66,7 +66,7 @@ export default class FilesView extends React.Component {
 
   elementForFile = (file) => {
     return (
-      <div className="sk-segmented-buttons">
+      <div className={"sk-segmented-buttons " + (this.isFileSelected(file) ? "expanded" : null)}>
         <div onClick={(event) => {this.selectFile(event, file)}} className={"file sk-button info " + (this.isFileSelected(file) ? "selected" : undefined)}>
           <div className="sk-label">
             {file.content.fileName}

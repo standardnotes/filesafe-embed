@@ -17,8 +17,8 @@ export default class MessagesManager {
     var credentials = await this.credentialManager.getDefaultCredentials();
     if(!credentials) {
       messages.push({
-        message: "No encryption keys loaded. Press Expand to generate new keys.",
-        css: "warning"
+        message: "Create keys by selecting <strong>Create New</strong> under <i>Keys</i>.",
+        css: "sk-base"
       })
     }
 
@@ -26,8 +26,8 @@ export default class MessagesManager {
 
     if(!integrations || integrations.length == 0) {
       messages.push({
-        message: "No cloud integrations configured. Press Expand to set up.",
-        css: "warning"
+        message: "Add a new integration by selecting <strong>Add New</strong> under <i>Integrations</i>",
+        css: "sk-base"
       })
     }
 
