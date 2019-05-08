@@ -6,7 +6,7 @@ export default class AllFilesView extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = {expanded: true, files: FilesafeManager.get().filesafe.getAllFileDescriptors() || []};
+    this.state = {expanded: false, files: FilesafeManager.get().filesafe.getAllFileDescriptors() || []};
 
     FilesafeManager.get().addDataChangeObserver(() => {
       this.setState({files: FilesafeManager.get().filesafe.getAllFileDescriptors()})
@@ -22,7 +22,7 @@ export default class AllFilesView extends React.Component {
       <div className="files-view">
         <div className="sk-panel-row justify-left">
           <div className="sk-horizontal-group">
-            <div className="sk-h4">All Files ({this.state.files.length})</div>
+            <div className="sk-panel-section-title">All Files ({this.state.files.length})</div>
             <a className="info" onClick={this.toggleVisibility}>{this.state.expanded ? "Hide" : "Show"}</a>
           </div>
         </div>

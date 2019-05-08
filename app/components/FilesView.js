@@ -9,7 +9,16 @@ export default class FilesView extends React.Component {
   }
 
   downloadFile = async (fileDescriptor) => {
-    this.setState({status: "Downloading..."});
+    if(this.isMobile) {
+      let platform = FilesafeManager.get().filesafe.getPlatform();
+      let display = platform == "ios" ? "iOS" : "Android";
+      alert(`Downloading files is not currently supported on ${display}.`)
+      return;
+    }
+
+    let integration = FilesafeManager.get().filesafe.integrationForFileDescriptor(fileDescriptor);
+    let name = FilesafeManager.get().filesafe.displayStringForIntegration(integration);
+    this.setState({status: `Downloading from ${name}...`});
 
     return FilesafeManager.get().filesafe.downloadFileFromDescriptor(fileDescriptor).then((item) => {
       this.setState({status: "Decrypting..."});
@@ -64,30 +73,49 @@ export default class FilesView extends React.Component {
     return this.state.selectedFile == metadata;
   }
 
+  get isMobile() {
+    return FilesafeManager.get().filesafe.isMobile();
+  }
+
   elementForFile = (file) => {
     return (
-      <div className={"sk-segmented-buttons " + (this.isFileSelected(file) ? "expanded" : null)}>
-        <div onClick={(event) => {this.selectFile(event, file)}} className={"file sk-button info " + (this.isFileSelected(file) ? "selected" : undefined)}>
+      <div className={"file-item-container " + (this.isFileSelected(file) ? "expanded" : "")}>
+        <div onClick={(event) => {this.selectFile(event, file)}} className={"file-item-button sk-button info " + (this.isFileSelected(file) ? "selected" : undefined)}>
           <div className="sk-label">
             {file.content.fileName}
           </div>
-        </div>
 
-        {this.isFileSelected(file) &&
-          [
-            <div onClick={() => {this.downloadFile(file)}} className="sk-button info">
-              <div className="sk-label">Download</div>
-            </div>,
+          {this.isFileSelected(file) &&
+            <div className="file-item-options-wrapper">
+              <div onClick={(e) => {e.stopPropagation()}} className={"sk-app-bar file-item-options"}>
+                <div className="center">
 
-            <div onClick={() => {this.copyInsertionLink(file)}} className="sk-button info">
-              <div className="sk-label">{this.state.copiedLink == file ? "Copied" : "Copy Insert Link"}</div>
-            </div>,
+                  <div onClick={(e) => {e.stopPropagation(); this.downloadFile(file)}} className="sk-app-bar-item">
+                    <div className={"sk-label contrast " + (this.isMobile ? "disabled" : "")}>
+                      Download
+                    </div>
+                  </div>
 
-            <div onClick={() => {this.deleteFile(file)}} className="sk-button danger">
-              <div className="sk-label">Delete</div>
+                  <div className="sk-app-bar-item border"></div>
+
+                  <div onClick={(e) => {e.stopPropagation(); this.copyInsertionLink(file)}} className="sk-app-bar-item">
+                    <div className="sk-label contrast">
+                      {this.state.copiedLink == file ? "Copied" : "Copy Insert Link"}
+                    </div>
+                  </div>
+
+                  <div className="sk-app-bar-item border"></div>
+
+                  <div onClick={(e) => {e.stopPropagation(); this.deleteFile(file)}} className="sk-app-bar-item">
+                    <div className="sk-label contrast">
+                      Delete
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-          ]
-        }
+          }
+        </div>
       </div>
     )
   }
@@ -100,7 +128,7 @@ export default class FilesView extends React.Component {
 
     if(this.state.status) {
       elements.push((
-        <div id="file-status" className="sk-horizontal-group">
+        <div id="file-download-status" className="sk-horizontal-group">
           {hasSpinner &&
             <div className="sk-spinner info small" />
           }

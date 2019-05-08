@@ -916,7 +916,7 @@
   box-shadow: inset 0 0 0 1px;
   color: var(--sn-stylekit-info-color); }
 
-.sn-component .sk-button.info:hover:before, .sn-component #filesafe-embed .files-view .files .sk-button.selected:before, #filesafe-embed .files-view .files .sn-component .sk-button.selected:before, .sn-component .info.sk-box:hover:before, .sn-component .sk-box.info:hover:before, .sn-component .sk-circle.info:hover:before {
+.sn-component .sk-button.info:hover:before, .sn-component #filesafe-embed .files-view .files .file-item-button.selected:before, #filesafe-embed .files-view .files .sn-component .file-item-button.selected:before, .sn-component .info.sk-box:hover:before, .sn-component .sk-box.info:hover:before, .sn-component .sk-circle.info:hover:before {
   filter: brightness(130%); }
 
 .sn-component .sk-button.info.no-bg, .sn-component .info.no-bg.sk-box, .sn-component .sk-box.info.no-bg, .sn-component .sk-circle.info.no-bg {
@@ -1891,6 +1891,9 @@ textarea,
       border: none; }
     #filesafe-embed .sn-component .sk-button {
       user-select: none; }
+    #filesafe-embed .sn-component .sk-circle.x-small {
+      width: 7px;
+      height: 7px; }
     #filesafe-embed .sn-component label.no-style {
       margin: 0;
       font-size: inherit; }
@@ -1898,6 +1901,8 @@ textarea,
     font-weight: bold; }
   #filesafe-embed .faded {
     opacity: 0.5; }
+  #filesafe-embed .list-container {
+    padding-left: 25px; }
   #filesafe-embed #messages-container {
     width: 100%;
     margin-bottom: 14px !important; }
@@ -1916,23 +1921,50 @@ textarea,
   #filesafe-embed .files-view {
     margin-top: 3px; }
     #filesafe-embed .files-view #add-file-button-container {
-      margin-right: 18px; }
-    #filesafe-embed .files-view #file-status {
+      margin-right: 18px;
+      margin-bottom: 8px; }
+    #filesafe-embed .files-view #file-upload-status, #filesafe-embed .files-view #file-download-status {
       margin-right: 30px;
-      padding-top: 8px; }
+      margin-bottom: 18px;
+      padding-top: 4px; }
     #filesafe-embed .files-view .segmented-buttons {
       margin-right: 10px; }
     #filesafe-embed .files-view .files {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap; }
-      #filesafe-embed .files-view .files .sk-segmented-buttons {
-        margin-right: 5px; }
-        #filesafe-embed .files-view .files .sk-segmented-buttons.expanded .sk-button:not(:first-child) {
-          border-left: 1px solid var(--sn-stylekit-info-contrast-color) !important; }
       #filesafe-embed .files-view .files .sk-button {
-        border: none;
-        margin-bottom: 10px;
+        white-space: normal;
+        word-break: break-all; }
+      #filesafe-embed .files-view .files .file-item-container {
         margin-right: 5px; }
-        #filesafe-embed .files-view .files .sk-button.selected {
-          margin-right: 0px; }
+        #filesafe-embed .files-view .files .file-item-container.expanded {
+          flex-wrap: wrap;
+          margin-bottom: 10px; }
+      #filesafe-embed .files-view .files .file-item-button {
+        border: none;
+        margin-right: 5px; }
+        #filesafe-embed .files-view .files .file-item-button:not(.selected) {
+          margin-bottom: 10px; }
+        #filesafe-embed .files-view .files .file-item-button.selected {
+          margin-right: 0px;
+          padding: 12px;
+          border-radius: 3px; }
+      #filesafe-embed .files-view .files .file-item-options-wrapper {
+        display: inline-block; }
+      #filesafe-embed .files-view .files .sk-app-bar.file-item-options {
+        display: flex;
+        flex-direction: row;
+        margin-top: 10px;
+        margin-bottom: 0px;
+        padding: 0 1rem;
+        width: unset; }
+        #filesafe-embed .files-view .files .sk-app-bar.file-item-options .center {
+          display: flex;
+          height: 100%;
+          margin-left: auto;
+          margin-right: auto; }
+        #filesafe-embed .files-view .files .sk-app-bar.file-item-options .disabled {
+          opacity: 0.5; }
+        #filesafe-embed .files-view .files .sk-app-bar.file-item-options .sk-button {
+          border-radius: 0; }

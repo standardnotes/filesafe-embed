@@ -20,7 +20,7 @@ export default class UploadFilesView extends React.Component {
 
     this.state = {
       noteFiles: FilesafeManager.get().filesafe.fileDescriptorsForCurrentNote(),
-      messages: []
+      messages: [],
     };
 
     FilesafeManager.get().addDataChangeObserver(() => {
@@ -210,9 +210,10 @@ export default class UploadFilesView extends React.Component {
     this.setState({status: "Encrypting..."});
 
     const credential = FilesafeManager.get().filesafe.getDefaultCredentials();
+    const integration = FilesafeManager.get().filesafe.getDefaultIntegration();
 
     return FilesafeManager.get().filesafe.encryptFile({data, inputFileName, fileType, credential}).then(async (fileItem) => {
-      this.setState({status: "Uploading..."});
+      this.setState({status: `Uploading to ${FilesafeManager.get().filesafe.displayStringForIntegration(integration)}...`});
       await this.wait(0.5);
 
       return FilesafeManager.get().filesafe.uploadFile({fileItem, inputFileName, fileType, credential}).then(() => {
@@ -249,7 +250,7 @@ export default class UploadFilesView extends React.Component {
             }
 
             {this.state.status &&
-              <div id="file-status" className="sk-horizontal-group">
+              <div id="file-upload-status" className="sk-horizontal-group">
                 {hasSpinner &&
                   <div className="sk-spinner info small" />
                 }

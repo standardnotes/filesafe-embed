@@ -67,17 +67,8 @@ export default class IntegrationsView extends React.Component {
     FilesafeManager.get().filesafe.setIntegrationAsDefault(integration);
   }
 
-  capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
-
   displayStringForIntegration(integration) {
-    var comps = integration.content.source.split("_");
-    var result = "";
-    for(var comp of comps) {
-      result += this.capitalizeFirstLetter(comp) + " ";
-    }
-    return result;
+    return FilesafeManager.get().filesafe.displayStringForIntegration(integration);
   }
 
   render() {
@@ -86,7 +77,7 @@ export default class IntegrationsView extends React.Component {
     return (
       <div>
         <div className="sk-panel-row">
-          <div className="sk-h3">Integrations ({this.state.integrations.length})</div>
+          <div className="sk-panel-section-title">Integrations ({this.state.integrations.length})</div>
           {!this.state.showInputForm &&
             <div className="sk-button info no-border" onClick={this.addNewIntegrationClicked}>
               <div className="sk-label">Add New</div>
@@ -124,7 +115,9 @@ export default class IntegrationsView extends React.Component {
             <div className="sk-panel-row">
               <div className="sk-horizontal-group">
                 <div>
-                  <span className={integration.content.isDefaultUploadSource ? "bold" : undefined}>{this.displayStringForIntegration(integration)}</span>
+                  <span className={integration.content.isDefaultUploadSource ? "bold" : undefined}>
+                    {this.displayStringForIntegration(integration)}
+                  </span>
                   {integration.content.isDefaultUploadSource &&
                     <span> (Default)</span>
                   }
