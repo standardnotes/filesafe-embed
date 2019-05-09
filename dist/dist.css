@@ -1868,8 +1868,10 @@ textarea,
 #filesafe-embed {
   font-size: var(--sn-stylekit-base-font-size);
   line-height: 1; }
-  #filesafe-embed.highlight {
+  #filesafe-embed.highlight #home {
     border: 2px dashed var(--sn-stylekit-info-color); }
+  #filesafe-embed a {
+    cursor: pointer; }
   #filesafe-embed .sn-component {
     font-size: var(--sn-stylekit-base-font-size) !important;
     user-select: auto !important; }
@@ -1891,6 +1893,12 @@ textarea,
       border: none; }
     #filesafe-embed .sn-component .sk-button {
       user-select: none; }
+    #filesafe-embed .sn-component .sk-horizontal-group.top > * {
+      vertical-align: top; }
+    #filesafe-embed .sn-component .sk-horizontal-group.top .sk-panel-row:first-child {
+      padding-top: 0; }
+    #filesafe-embed .sn-component .sk-horizontal-group .sk-panel-section-title {
+      margin-bottom: 0; }
     #filesafe-embed .sn-component .sk-circle.x-small {
       width: 7px;
       height: 7px; }
@@ -1902,7 +1910,10 @@ textarea,
   #filesafe-embed .faded {
     opacity: 0.5; }
   #filesafe-embed .list-container {
-    padding-left: 25px; }
+    padding-left: 25px;
+    margin-top: 10px; }
+    #filesafe-embed .list-container .list-item:not(:last-child) {
+      margin-bottom: 12px; }
   #filesafe-embed #messages-container {
     width: 100%;
     margin-bottom: 14px !important; }
@@ -1952,13 +1963,19 @@ textarea,
           border-radius: 3px; }
       #filesafe-embed .files-view .files .file-item-options-wrapper {
         display: inline-block; }
+        #filesafe-embed .files-view .files .file-item-options-wrapper .file-location {
+          opacity: 0.7;
+          font-size: 0.7rem;
+          margin-top: 9px; }
       #filesafe-embed .files-view .files .sk-app-bar.file-item-options {
+        width: fit-content;
         display: flex;
         flex-direction: row;
         margin-top: 10px;
         margin-bottom: 0px;
-        padding: 0 1rem;
-        width: unset; }
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 1rem; }
         #filesafe-embed .files-view .files .sk-app-bar.file-item-options .center {
           display: flex;
           height: 100%;

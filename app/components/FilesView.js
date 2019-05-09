@@ -78,6 +78,12 @@ export default class FilesView extends React.Component {
   }
 
   elementForFile = (file) => {
+    console.log("file", file);
+
+    const integration = FilesafeManager.get().filesafe.integrationForFileDescriptor(file);
+    const integrationName = FilesafeManager.get().filesafe.displayStringForIntegration(integration);
+    const path = file.content.serverMetadata.file_path;
+
     return (
       <div className={"file-item-container " + (this.isFileSelected(file) ? "expanded" : "")}>
         <div onClick={(event) => {this.selectFile(event, file)}} className={"file-item-button sk-button info " + (this.isFileSelected(file) ? "selected" : undefined)}>
@@ -89,7 +95,6 @@ export default class FilesView extends React.Component {
             <div className="file-item-options-wrapper">
               <div onClick={(e) => {e.stopPropagation()}} className={"sk-app-bar file-item-options"}>
                 <div className="center">
-
                   <div onClick={(e) => {e.stopPropagation(); this.downloadFile(file)}} className="sk-app-bar-item">
                     <div className={"sk-label contrast " + (this.isMobile ? "disabled" : "")}>
                       Download
@@ -112,6 +117,10 @@ export default class FilesView extends React.Component {
                     </div>
                   </div>
                 </div>
+              </div>
+              <div className="file-location">
+                <strong>{integrationName}</strong>
+                <span> {path}</span>
               </div>
             </div>
           }

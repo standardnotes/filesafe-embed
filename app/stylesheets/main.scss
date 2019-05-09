@@ -6,7 +6,14 @@
   line-height: 1;
 
   &.highlight {
-    border: 2px dashed var(--sn-stylekit-info-color);
+    // Adding it to filesafe-embed creates border with distorted solid (non-dashed) bg for some reason
+    #home {
+      border: 2px dashed var(--sn-stylekit-info-color);
+    }
+  }
+
+  a {
+    cursor: pointer;
   }
 
   .sn-component {
@@ -45,6 +52,21 @@
       user-select: none;
     }
 
+    .sk-horizontal-group.top {
+      > * {
+        vertical-align: top;
+      }
+
+      .sk-panel-row:first-child {
+        padding-top: 0;
+        // padding-bottom: 0;
+      }
+    }
+
+    .sk-horizontal-group .sk-panel-section-title {
+      margin-bottom: 0;
+    }
+
     .sk-circle.x-small {
       width: 7px;
       height: 7px;
@@ -66,6 +88,11 @@
 
   .list-container {
     padding-left: 25px;
+    margin-top: 10px;
+
+    .list-item:not(:last-child) {
+      margin-bottom: 12px;
+    }
   }
 
   #messages-container {
@@ -149,15 +176,23 @@
 
       .file-item-options-wrapper {
         display: inline-block;
+
+        .file-location {
+          opacity: 0.7;
+          font-size: 0.7rem;
+          margin-top: 9px;
+        }
       }
 
       .sk-app-bar.file-item-options {
+        width: fit-content;
         display: flex;
         flex-direction: row;
         margin-top: 10px;
         margin-bottom: 0px;
+        margin-left: auto;
+        margin-right: auto;
         padding: 0 1rem;
-        width: unset;
 
         .center {
           display: flex;

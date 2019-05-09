@@ -48,7 +48,7 @@ export default class KeysView extends React.Component {
       <div>
         <div className="sk-panel-row">
           <div className="sk-horizontal-group">
-            <div className="sk-circle info small"></div>
+            <div className="sk-circle info x-small"></div>
             <div className="sk-h2 sk-bold">Keys</div>
           </div>
           <div className="sk-button info no-border" onClick={this.createNewKeys}>
@@ -58,25 +58,27 @@ export default class KeysView extends React.Component {
 
         <div className="list-container">
           {this.state.credentials.map((credential) =>
-            <div className="sk-horizontal-group">
-              <div className={"sk-circle x-small " + (credential.content.isDefault ? "success" : "sk-secondary-contrast")}>
+            <div className="list-item sk-horizontal-group top">
+              <div className={"sk-circle x-small " + (credential.content.isDefault ? "info" : "sk-secondary-contrast")}>
               </div>
 
               <div>
-                <div className="sk-panel-row">
+                <div className="sk-panel-row condensed sk-bold">
                   {this.labelForCredential(credential)}
                 </div>
 
-                <div className="sk-panel-row">
+                <div style={{marginTop: 3}} className="sk-panel-row condensed">
                   {this.numFilesForCredential(credential)} encrypted files
                 </div>
 
-                <div className="sk-horizontal-group">
-                  {this.state.credentials.length > 1 && !credential.content.isDefault &&
-                    <a className="info" onClick={() => {this.setCredentialAsDefault(credential)}}>Make Default</a>
-                  }
-                  <a className="info" onClick={() => {this.exportCredential(credential)}}>Export</a>
-                  <a className="danger" onClick={() => {this.deleteCredential(credential)}}>Delete</a>
+                <div className="sk-panel-row condensed">
+                  <div className="sk-horizontal-group">
+                    {this.state.credentials.length > 1 && !credential.content.isDefault &&
+                      <a className="info" onClick={() => {this.setCredentialAsDefault(credential)}}>Make Default</a>
+                    }
+                    <a className="info" onClick={() => {this.exportCredential(credential)}}>Export</a>
+                    <a className="danger" onClick={() => {this.deleteCredential(credential)}}>Delete</a>
+                  </div>
                 </div>
 
               </div>

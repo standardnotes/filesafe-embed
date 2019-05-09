@@ -77,7 +77,10 @@ export default class IntegrationsView extends React.Component {
     return (
       <div>
         <div className="sk-panel-row">
-          <div className="sk-panel-section-title">Integrations ({this.state.integrations.length})</div>
+          <div className="sk-horizontal-group">
+            <div className="sk-circle info x-small"></div>
+            <div className="sk-h2 sk-bold">Integrations</div>
+          </div>
           {!this.state.showInputForm &&
             <div className="sk-button info no-border" onClick={this.addNewIntegrationClicked}>
               <div className="sk-label">Add New</div>
@@ -89,7 +92,8 @@ export default class IntegrationsView extends React.Component {
           {this.state.showInputForm &&
             <div className="sk-notification info">
               <strong>New Integration</strong>
-              <p>A new tab has opened. After you complete the authentication flow, enter the code you receive below.</p>
+              <p className="sk-p">A new tab has opened. After you complete the authentication flow, enter the code you receive below.</p>
+              <div className="sk-panel-row"></div>
               <input
                 className="title sk-input contrast"
                 type="text"
@@ -100,7 +104,7 @@ export default class IntegrationsView extends React.Component {
               />
               <div className="sk-button-group" style={{marginTop: 10}}>
                 <div className="sk-button neutral" onClick={this.cancelIntegrationForm}>
-                  <a className="">Cancel</a>
+                  <a className="sk-label">Cancel</a>
                 </div>
                 <div className="sk-button sk-base" onClick={this.submitIntegrationCode}>
                   <a className="sk-label">Submit</a>
@@ -110,22 +114,25 @@ export default class IntegrationsView extends React.Component {
           }
         </div>
 
-        <div>
+        <div className="list-container">
           {this.state.integrations.map((integration) =>
-            <div className="sk-panel-row">
-              <div className="sk-horizontal-group">
-                <div>
-                  <span className={integration.content.isDefaultUploadSource ? "bold" : undefined}>
-                    {this.displayStringForIntegration(integration)}
-                  </span>
-                  {integration.content.isDefaultUploadSource &&
-                    <span> (Default)</span>
-                  }
+            <div className="list-item sk-horizontal-group top">
+              <div className={"sk-circle x-small " + (integration.content.isDefaultUploadSource ? "info" : "sk-secondary-contrast")}>
+              </div>
+
+              <div>
+                <div className="sk-panel-row condensed sk-bold">
+                  {this.displayStringForIntegration(integration)}
                 </div>
-                {hasMultipleIntegrations && !integration.content.isDefaultUploadSource &&
-                  <a className="info" onClick={() => {this.setIntegrationAsDefaultUploadSource(integration)}}>Make Default</a>
-                }
-                <a className="danger" onClick={() => {this.deleteIntegration(integration)}}>Delete</a>
+
+                <div className="sk-panel-row condensed">
+                  <div className="sk-horizontal-group">
+                    {hasMultipleIntegrations && !integration.content.isDefaultUploadSource &&
+                      <a className="info" onClick={() => {this.setIntegrationAsDefaultUploadSource(integration)}}>Make Default</a>
+                    }
+                    <a className="danger" onClick={() => {this.deleteIntegration(integration)}}>Delete</a>
+                  </div>
+                </div>
               </div>
             </div>
           )}

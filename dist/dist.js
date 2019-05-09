@@ -365,6 +365,10 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "elementForFile", function (file) {
+      console.log("file", file);
+      var integration = __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.integrationForFileDescriptor(file);
+      var integrationName = __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.displayStringForIntegration(integration);
+      var path = file.content.serverMetadata.file_path;
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "file-item-container " + (_this.isFileSelected(file) ? "expanded" : "")
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -414,7 +418,9 @@ function (_React$Component) {
         className: "sk-app-bar-item"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-label contrast"
-      }, "Delete")))))));
+      }, "Delete")))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "file-location"
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("strong", null, integrationName), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", null, " ", path)))));
     });
 
     _this.state = {};
@@ -758,7 +764,7 @@ function (_React$Component) {
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-horizontal-group"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-circle info small"
+        className: "sk-circle info x-small"
       }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-h2 sk-bold"
       }, "Keys")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -770,14 +776,19 @@ function (_React$Component) {
         className: "list-container"
       }, this.state.credentials.map(function (credential) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-          className: "sk-horizontal-group"
+          className: "list-item sk-horizontal-group top"
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-          className: "sk-circle x-small " + (credential.content.isDefault ? "success" : "sk-secondary-contrast")
+          className: "sk-circle x-small " + (credential.content.isDefault ? "info" : "sk-secondary-contrast")
         }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-          className: "sk-panel-row"
+          className: "sk-panel-row condensed sk-bold"
         }, _this2.labelForCredential(credential)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-          className: "sk-panel-row"
+          style: {
+            marginTop: 3
+          },
+          className: "sk-panel-row condensed"
         }, _this2.numFilesForCredential(credential), " encrypted files"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+          className: "sk-panel-row condensed"
+        }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "sk-horizontal-group"
         }, _this2.state.credentials.length > 1 && !credential.content.isDefault && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
           className: "info",
@@ -794,7 +805,7 @@ function (_React$Component) {
           onClick: function onClick() {
             _this2.deleteCredential(credential);
           }
-        }, "Delete"))));
+        }, "Delete")))));
       })));
     }
   }]);
@@ -17475,6 +17486,7 @@ function () {
 
       var comps = integration.content.source.split("_");
       var result = "";
+      var index = 0;
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
@@ -17482,7 +17494,13 @@ function () {
       try {
         for (var _iterator = comps[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var comp = _step.value;
-          result += capitalizeFirstLetter(comp) + " ";
+          result += capitalizeFirstLetter(comp);
+
+          if (index < comps.length - 1) {
+            result += " ";
+          }
+
+          index++;
         }
       } catch (err) {
         _didIteratorError = true;
@@ -19328,8 +19346,12 @@ function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-panel-row"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-panel-section-title"
-      }, "Integrations (", this.state.integrations.length, ")"), !this.state.showInputForm && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "sk-horizontal-group"
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "sk-circle info x-small"
+      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "sk-h2 sk-bold"
+      }, "Integrations")), !this.state.showInputForm && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-button info no-border",
         onClick: this.addNewIntegrationClicked
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -19338,7 +19360,11 @@ function (_React$Component) {
         id: "integrations"
       }, this.state.showInputForm && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-notification info"
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("strong", null, "New Integration"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("p", null, "A new tab has opened. After you complete the authentication flow, enter the code you receive below."), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("strong", null, "New Integration"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("p", {
+        className: "sk-p"
+      }, "A new tab has opened. After you complete the authentication flow, enter the code you receive below."), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "sk-panel-row"
+      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("input", {
         className: "title sk-input contrast",
         type: "text",
         placeholder: "Enter integration code",
@@ -19354,20 +19380,26 @@ function (_React$Component) {
         className: "sk-button neutral",
         onClick: this.cancelIntegrationForm
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
-        className: ""
+        className: "sk-label"
       }, "Cancel")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-button sk-base",
         onClick: this.submitIntegrationCode
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
         className: "sk-label"
-      }, "Submit"))))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, this.state.integrations.map(function (integration) {
+      }, "Submit"))))), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "list-container"
+      }, this.state.integrations.map(function (integration) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-          className: "sk-panel-row"
+          className: "list-item sk-horizontal-group top"
+        }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+          className: "sk-circle x-small " + (integration.content.isDefaultUploadSource ? "info" : "sk-secondary-contrast")
+        }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+          className: "sk-panel-row condensed sk-bold"
+        }, _this2.displayStringForIntegration(integration)), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+          className: "sk-panel-row condensed"
         }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
           className: "sk-horizontal-group"
-        }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
-          className: integration.content.isDefaultUploadSource ? "bold" : undefined
-        }, _this2.displayStringForIntegration(integration)), integration.content.isDefaultUploadSource && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", null, " (Default)")), hasMultipleIntegrations && !integration.content.isDefaultUploadSource && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
+        }, hasMultipleIntegrations && !integration.content.isDefaultUploadSource && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
           className: "info",
           onClick: function onClick() {
             _this2.setIntegrationAsDefaultUploadSource(integration);
@@ -19377,7 +19409,7 @@ function (_React$Component) {
           onClick: function onClick() {
             _this2.deleteIntegration(integration);
           }
-        }, "Delete")));
+        }, "Delete")))));
       })));
     }
   }]);
