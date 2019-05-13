@@ -78,8 +78,6 @@ export default class FilesView extends React.Component {
   }
 
   elementForFile = (file) => {
-    console.log("file", file);
-
     const integration = FilesafeManager.get().filesafe.integrationForFileDescriptor(file);
     const integrationName = FilesafeManager.get().filesafe.displayStringForIntegration(integration);
     const path = file.content.serverMetadata.file_path;

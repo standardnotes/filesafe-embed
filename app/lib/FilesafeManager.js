@@ -41,7 +41,9 @@ export default class FilesafeManager {
 
     this.dataChangeObservers = [];
 
-    this.filesafe.removeDataChangeObserver(this.fsObserver);
+    if(this.filesafe) {
+      this.filesafe.removeDataChangeObserver(this.fsObserver);
+    }
 
     FilesafeManager.instance = null;
   }

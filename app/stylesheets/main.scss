@@ -87,8 +87,12 @@
   }
 
   .list-container {
-    padding-left: 25px;
+    // padding-left: 25px;
     margin-top: 10px;
+
+    .list-item .sk-circle {
+      margin-top: 2px;
+    }
 
     .list-item:not(:last-child) {
       margin-bottom: 12px;
@@ -103,6 +107,12 @@
   #messages {
     width: 100%;
 
+    .title {
+      font-weight: bold;
+      font-size: var(--sn-stylekit-font-size-h4);
+      margin-bottom: 12px;
+    }
+
     ul {
       margin: 0;
       margin-top: 6px;
@@ -112,6 +122,10 @@
       li {
         line-height: 1.4;
         font-weight: 500;
+
+        &:not(last-child) {
+          margin-bottom: 5px;
+        }
       }
     }
   }

@@ -1910,8 +1910,9 @@ textarea,
   #filesafe-embed .faded {
     opacity: 0.5; }
   #filesafe-embed .list-container {
-    padding-left: 25px;
     margin-top: 10px; }
+    #filesafe-embed .list-container .list-item .sk-circle {
+      margin-top: 2px; }
     #filesafe-embed .list-container .list-item:not(:last-child) {
       margin-bottom: 12px; }
   #filesafe-embed #messages-container {
@@ -1919,6 +1920,10 @@ textarea,
     margin-bottom: 14px !important; }
   #filesafe-embed #messages {
     width: 100%; }
+    #filesafe-embed #messages .title {
+      font-weight: bold;
+      font-size: var(--sn-stylekit-font-size-h4);
+      margin-bottom: 12px; }
     #filesafe-embed #messages ul {
       margin: 0;
       margin-top: 6px;
@@ -1927,6 +1932,8 @@ textarea,
       #filesafe-embed #messages ul li {
         line-height: 1.4;
         font-weight: 500; }
+        #filesafe-embed #messages ul li:not(last-child) {
+          margin-bottom: 5px; }
   #filesafe-embed #attach-file-button-label {
     color: var(--sn-stylekit-info-contrast-color); }
   #filesafe-embed .files-view {

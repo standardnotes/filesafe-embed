@@ -183,7 +183,11 @@ function () {
       }
 
       this.dataChangeObservers = [];
-      this.filesafe.removeDataChangeObserver(this.fsObserver);
+
+      if (this.filesafe) {
+        this.filesafe.removeDataChangeObserver(this.fsObserver);
+      }
+
       FilesafeManager.instance = null;
     }
   }, {
@@ -365,7 +369,6 @@ function (_React$Component) {
     });
 
     _defineProperty(_assertThisInitialized(_this), "elementForFile", function (file) {
-      console.log("file", file);
       var integration = __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.integrationForFileDescriptor(file);
       var integrationName = __WEBPACK_IMPORTED_MODULE_1__lib_FilesafeManager__["a" /* default */].get().filesafe.displayStringForIntegration(integration);
       var path = file.content.serverMetadata.file_path;
@@ -762,12 +765,8 @@ function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-panel-row"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-horizontal-group"
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-circle info x-small"
-      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-h2 sk-bold"
-      }, "Keys")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+      }, "Keys"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-button info no-border",
         onClick: this.createNewKeys
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -15199,6 +15198,7 @@ function () {
     key: "setCurrentNote",
     value: function setCurrentNote(note) {
       this.currentNote = note;
+      this.notifyObservers();
     }
     /* Files */
 
@@ -15266,7 +15266,12 @@ function () {
             switch (_context2.prev = _context2.next) {
               case 0:
                 fileItem = _ref2.fileItem, inputFileName = _ref2.inputFileName, fileType = _ref2.fileType, credential = _ref2.credential, note = _ref2.note;
-                _context2.next = 3;
+
+                if (!note) {
+                  note = this.currentNote;
+                }
+
+                _context2.next = 4;
                 return this.fileManager.uploadFile({
                   fileItem: fileItem,
                   inputFileName: inputFileName,
@@ -15275,66 +15280,66 @@ function () {
                   note: note
                 });
 
-              case 3:
+              case 4:
                 descriptor = _context2.sent;
 
                 if (!descriptor) {
-                  _context2.next = 24;
+                  _context2.next = 25;
                   break;
                 }
 
                 _iteratorNormalCompletion2 = true;
                 _didIteratorError2 = false;
                 _iteratorError2 = undefined;
-                _context2.prev = 8;
+                _context2.prev = 9;
 
                 for (_iterator2 = this.newFileDescriptorHandlers[Symbol.iterator](); !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
                   observer = _step2.value;
                   observer(descriptor);
                 }
 
-                _context2.next = 16;
+                _context2.next = 17;
                 break;
 
-              case 12:
-                _context2.prev = 12;
-                _context2.t0 = _context2["catch"](8);
+              case 13:
+                _context2.prev = 13;
+                _context2.t0 = _context2["catch"](9);
                 _didIteratorError2 = true;
                 _iteratorError2 = _context2.t0;
 
-              case 16:
-                _context2.prev = 16;
+              case 17:
                 _context2.prev = 17;
+                _context2.prev = 18;
 
                 if (!_iteratorNormalCompletion2 && _iterator2["return"] != null) {
                   _iterator2["return"]();
                 }
 
-              case 19:
-                _context2.prev = 19;
+              case 20:
+                _context2.prev = 20;
 
                 if (!_didIteratorError2) {
-                  _context2.next = 22;
+                  _context2.next = 23;
                   break;
                 }
 
                 throw _iteratorError2;
 
-              case 22:
-                return _context2.finish(19);
-
               case 23:
-                return _context2.finish(16);
+                return _context2.finish(20);
 
               case 24:
-                return _context2.abrupt("return", descriptor);
+                return _context2.finish(17);
 
               case 25:
+                return _context2.abrupt("return", descriptor);
+
+              case 26:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this, [[8, 12, 16, 24], [17,, 19, 23]]);
+        }, _callee2, this, [[9, 13, 17, 25], [18,, 20, 24]]);
       }));
 
       function uploadFile(_x2) {
@@ -17908,7 +17913,7 @@ function () {
                 fileItem = _ref.fileItem, inputFileName = _ref.inputFileName, fileType = _ref.fileType, credential = _ref.credential, note = _ref.note;
                 integration = this.integrationManager.getDefaultIntegration();
                 fileExt = inputFileName.split(".")[1];
-                outputFileName = "".concat(fileItem.uuid, ".").concat(fileExt, ".sf.json");
+                outputFileName = "".concat(fileItem.uuid, ".sf.json");
                 return _context2.abrupt("return", new Promise(function (resolve, reject) {
                   var worker = new __WEBPACK_IMPORTED_MODULE_2__util_encryption_worker_js___default.a();
                   worker.addEventListener("message", function (event) {
@@ -19103,7 +19108,9 @@ function (_React$Component) {
     value: function render() {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         id: "messages"
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("strong", null, "Before uploading a file, you must:"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("ul", null, this.props.messages.map(function (message) {
+      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+        className: "title"
+      }, "Complete the following steps before uploading your first file:"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("ul", null, this.props.messages.map(function (message) {
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("li", {
           dangerouslySetInnerHTML: {
             __html: message.message
@@ -19194,7 +19201,11 @@ function (_React$Component) {
         className: "sk-horizontal-group"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-panel-section-title"
-      }, "All Files (", this.state.files.length, ")"), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
+      }, "All Files ", __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("span", {
+        style: {
+          fontWeight: "normal"
+        }
+      }, "(", this.state.files.length, ")")), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("a", {
         className: "info",
         onClick: this.toggleVisibility
       }, this.state.expanded ? "Hide" : "Show"))), this.state.expanded && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
@@ -19346,12 +19357,8 @@ function (_React$Component) {
       return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", null, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-panel-row"
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-horizontal-group"
-      }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
-        className: "sk-circle info x-small"
-      }), __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-h2 sk-bold"
-      }, "Integrations")), !this.state.showInputForm && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
+      }, "Integrations"), !this.state.showInputForm && __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {
         className: "sk-button info no-border",
         onClick: this.addNewIntegrationClicked
       }, __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement("div", {

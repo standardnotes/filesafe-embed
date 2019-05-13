@@ -77,10 +77,7 @@ export default class IntegrationsView extends React.Component {
     return (
       <div>
         <div className="sk-panel-row">
-          <div className="sk-horizontal-group">
-            <div className="sk-circle info x-small"></div>
-            <div className="sk-h2 sk-bold">Integrations</div>
-          </div>
+          <div className="sk-h2 sk-bold">Integrations</div>
           {!this.state.showInputForm &&
             <div className="sk-button info no-border" onClick={this.addNewIntegrationClicked}>
               <div className="sk-label">Add New</div>

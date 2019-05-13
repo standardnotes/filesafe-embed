@@ -47,10 +47,7 @@ export default class KeysView extends React.Component {
     return (
       <div>
         <div className="sk-panel-row">
-          <div className="sk-horizontal-group">
-            <div className="sk-circle info x-small"></div>
-            <div className="sk-h2 sk-bold">Keys</div>
-          </div>
+          <div className="sk-h2 sk-bold">Keys</div>
           <div className="sk-button info no-border" onClick={this.createNewKeys}>
             <div className="sk-label">Create New</div>
           </div>

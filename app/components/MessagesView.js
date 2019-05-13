@@ -10,7 +10,7 @@ export default class MessagesView extends React.Component {
   render() {
     return (
       <div id="messages">
-        <strong>Before uploading a file, you must:</strong>
+        <div className="title">Complete the following steps before uploading your first file:</div>
         <ul>
           {this.props.messages.map((message) =>
             <li dangerouslySetInnerHTML={{__html: message.message}} className={message.css}>
