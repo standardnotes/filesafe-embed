@@ -6,8 +6,9 @@ import FilesafeManager from "./lib/FilesafeManager"
 export default class FilesafeEmbed extends React.Component {
 
   // Called by consumer
-  static renderInElement(element, filesafe) {
+  static renderInElement(element, filesafe, delegate) {
     FilesafeManager.get().setFilesafeInstance(filesafe);
+    FilesafeManager.get().setDelegate(delegate);
     ReactDOM.render(React.createElement(FilesafeEmbed), element);
   }
 

@@ -67,7 +67,7 @@
       margin-bottom: 0;
     }
 
-    .sk-circle.x-small {
+    .sk-circle.x-small, .sk-spinner.x-small {
       width: 7px;
       height: 7px;
     }
@@ -142,10 +142,24 @@
       margin-bottom: 8px;
     }
 
-    #file-upload-status, #file-download-status {
+    #file-upload-status {
       margin-right: 30px;
       margin-bottom: 18px;
       padding-top: 4px;
+    }
+
+    .file-download-status {
+      margin-top: 10px;
+      margin-bottom: 0px;
+      .sk-spinner  {
+        border-color: var(--sn-stylekit-info-contrast-color);
+        border-right-color: transparent; // required
+      }
+
+      .file-status-label {
+        font-weight: bold;
+        margin-left: 0.5rem;
+      }
     }
 
     .segmented-buttons {

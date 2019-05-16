@@ -1899,7 +1899,7 @@ textarea,
       padding-top: 0; }
     #filesafe-embed .sn-component .sk-horizontal-group .sk-panel-section-title {
       margin-bottom: 0; }
-    #filesafe-embed .sn-component .sk-circle.x-small {
+    #filesafe-embed .sn-component .sk-circle.x-small, #filesafe-embed .sn-component .sk-spinner.x-small {
       width: 7px;
       height: 7px; }
     #filesafe-embed .sn-component label.no-style {
@@ -1941,10 +1941,19 @@ textarea,
     #filesafe-embed .files-view #add-file-button-container {
       margin-right: 18px;
       margin-bottom: 8px; }
-    #filesafe-embed .files-view #file-upload-status, #filesafe-embed .files-view #file-download-status {
+    #filesafe-embed .files-view #file-upload-status {
       margin-right: 30px;
       margin-bottom: 18px;
       padding-top: 4px; }
+    #filesafe-embed .files-view .file-download-status {
+      margin-top: 10px;
+      margin-bottom: 0px; }
+      #filesafe-embed .files-view .file-download-status .sk-spinner {
+        border-color: var(--sn-stylekit-info-contrast-color);
+        border-right-color: transparent; }
+      #filesafe-embed .files-view .file-download-status .file-status-label {
+        font-weight: bold;
+        margin-left: 0.5rem; }
     #filesafe-embed .files-view .segmented-buttons {
       margin-right: 10px; }
     #filesafe-embed .files-view .files {

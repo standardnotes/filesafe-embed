@@ -26,6 +26,14 @@ export default class FilesafeManager {
     })
   }
 
+  setDelegate(delegate) {
+    this.delegate = delegate;
+  }
+
+  getDelegate() {
+    return this.delegate || {};
+  }
+
   addDataChangeObserver(observer) {
     this.dataChangeObservers.push(observer);
   }

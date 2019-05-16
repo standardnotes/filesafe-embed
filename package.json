@@ -1,6 +1,6 @@
 {
   "name": "filesafe-embed",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "dist/dist.js",
   "author": "Standard Notes",
   "scripts": {
@@ -38,6 +38,6 @@
     "lodash": "^4.17.10"
   },
   "dependencies": {
-    "filesafe-js": "^1.0.1"
+    "filesafe-js": "1.0.3"
   }
 }
