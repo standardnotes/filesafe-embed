@@ -1,5 +1,3 @@
-import Filesafe from "filesafe-js";
-
 export default class FilesafeManager {
 
   /*

@@ -1,6 +1,6 @@
 {
   "name": "filesafe-embed",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "dist/dist.js",
   "author": "Standard Notes",
   "scripts": {
@@ -36,8 +36,5 @@
     "webpack-cli": "^3.3.1",
     "webpack-dev-server": "^2.9.7",
     "lodash": "^4.17.10"
-  },
-  "dependencies": {
-    "filesafe-js": "1.0.3"
   }
 }
