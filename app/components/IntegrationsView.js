@@ -45,9 +45,12 @@ export default class IntegrationsView extends React.Component {
       return;
     }
 
-    FilesafeManager.get().filesafe.saveIntegrationFromCode(code);
-    this.setState({integrationCode: null, showInputForm: false});
-    this.reloadIntegrations();
+    FilesafeManager.get().filesafe.saveIntegrationFromCode(code).then(() => {
+      this.setState({integrationCode: null, showInputForm: false});
+      this.reloadIntegrations();
+    }).catch(() => {
+      alert("Invalid integration code. Ensure the correct value is copied and try again.");
+    });
   }
 
   addNewIntegrationClicked = () => {

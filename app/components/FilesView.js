@@ -13,7 +13,7 @@ export default class FilesView extends React.Component {
     if(this._supportsPreview !== undefined) {
       return this._supportsPreview;
     }
-    
+
     let env = FilesafeManager.get().filesafe.getEnvironment();
     // May be undefined if bridge hasn't been established yet.
     if(env == undefined) {
@@ -33,6 +33,10 @@ export default class FilesView extends React.Component {
 
   decryptFile = async (fileDescriptor) => {
     let integration = FilesafeManager.get().filesafe.integrationForFileDescriptor(fileDescriptor);
+    if(!integration) {
+      alert(`Unable to find integration for file. If you have deleted the integration, please re-add it and try again.`);
+      return;
+    }
     let name = FilesafeManager.get().filesafe.displayStringForIntegration(integration);
     this.setStatusForFile(fileDescriptor, `Downloading from ${name}...`, true);
 
@@ -136,7 +140,13 @@ export default class FilesView extends React.Component {
 
   elementForFile = (file) => {
     const integration = FilesafeManager.get().filesafe.integrationForFileDescriptor(file);
-    const integrationName = FilesafeManager.get().filesafe.displayStringForIntegration(integration);
+
+    let integrationName;
+    if(integration) {
+      integrationName = FilesafeManager.get().filesafe.displayStringForIntegration(integration);
+    } else {
+      integrationName = "Integration Not Found";
+    }
     const path = file.content.serverMetadata.file_path;
 
     let previewReady = this.state.previewUrl && this.state.previewingFile == file;
@@ -172,8 +182,8 @@ export default class FilesView extends React.Component {
                   </div>
 
                   <div className="sk-app-bar-item border"></div>
-                  
-                  {this.supportsPreviews && previewReady && 
+
+                  {this.supportsPreviews && previewReady &&
                     <a className="sk-app-bar-item" href={this.state.previewUrl} onClick={(e) => {e.stopPropagation(); this.onClickPreview()}} target="_blank">
                       <div className={"sk-label contrast"}>
                         Open Preview
@@ -181,12 +191,12 @@ export default class FilesView extends React.Component {
                     </a>
                   }
 
-                  {this.supportsPreviews && !previewReady && 
+                  {this.supportsPreviews && !previewReady &&
                     <div onClick={(e) => {e.stopPropagation(); this.previewFile(file)}} className="sk-app-bar-item">
                       <div className={"sk-label contrast " + (this.isMobile ? "disabled" : "")}>
                         Preview
                       </div>
-                    </div>                    
+                    </div>
                   }
 
                   {this.supportsPreviews &&
