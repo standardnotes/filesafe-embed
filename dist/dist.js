@@ -1776,7 +1776,27 @@ function (_React$Component) {
                   status: "Encrypting..."
                 });
                 credential = __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.getDefaultCredentials();
+
+                if (credential) {
+                  _context9.next = 5;
+                  break;
+                }
+
+                alert("Please set up at least one key before attempting to upload a file. To do this, press Expand, and select Create New in the Keys section.");
+                return _context9.abrupt("return");
+
+              case 5:
                 integration = __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.getDefaultIntegration();
+
+                if (integration) {
+                  _context9.next = 9;
+                  break;
+                }
+
+                alert("Please set up at least one integration before attempting to upload a file. To do this, press Expand, and select Add New in the Integrations section.");
+                return _context9.abrupt("return");
+
+              case 9:
                 return _context9.abrupt("return", __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.encryptFile({
                   data: data,
                   inputFileName: inputFileName,
@@ -1828,7 +1848,7 @@ function (_React$Component) {
                   };
                 }()));
 
-              case 4:
+              case 10:
               case "end":
                 return _context9.stop();
             }
