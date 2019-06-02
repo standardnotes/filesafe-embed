@@ -1344,13 +1344,6 @@ function (_React$Component) {
                 return _context.finish(23);
 
               case 31:
-                setTimeout(function () {
-                  _this.setState({
-                    status: null
-                  });
-                }, 2000);
-
-              case 32:
               case "end":
                 return _context.stop();
             }
@@ -1775,25 +1768,31 @@ function (_React$Component) {
                 credential = __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.getDefaultCredentials();
 
                 if (credential) {
-                  _context9.next = 4;
+                  _context9.next = 5;
                   break;
                 }
 
+                this.setState({
+                  status: null
+                });
                 alert("Please set up at least one key before attempting to upload a file. To do this, press Expand, and select Create New in the Keys section.");
                 return _context9.abrupt("return");
 
-              case 4:
+              case 5:
                 integration = __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.getDefaultIntegration();
 
                 if (integration) {
-                  _context9.next = 8;
+                  _context9.next = 10;
                   break;
                 }
 
+                this.setState({
+                  status: null
+                });
                 alert("Please set up at least one integration before attempting to upload a file. To do this, press Expand, and select Add New in the Integrations section.");
                 return _context9.abrupt("return");
 
-              case 8:
+              case 10:
                 this.setState({
                   status: "Encrypting..."
                 });
@@ -1829,6 +1828,12 @@ function (_React$Component) {
                               _this5.setState({
                                 status: "Upload Success."
                               });
+
+                              setTimeout(function () {
+                                _this5.setState({
+                                  status: null
+                                });
+                              }, 2000);
                             })["catch"](function (uploadError) {
                               console.error("fs-embed | error uploading file:", uploadError);
 
@@ -1848,7 +1853,7 @@ function (_React$Component) {
                   };
                 }()));
 
-              case 10:
+              case 12:
               case "end":
                 return _context9.stop();
             }

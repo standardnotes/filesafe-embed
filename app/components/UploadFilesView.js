@@ -163,10 +163,6 @@ export default class UploadFilesView extends React.Component {
 
       await this.readFile(file);
     }
-
-    setTimeout(() => {
-      this.setState({status: null});
-    }, 2000);
   }
 
   async decryptDraggedFile(fileDescriptor) {
@@ -209,12 +205,14 @@ export default class UploadFilesView extends React.Component {
   async encryptFile(data, inputFileName, fileType) {
     const credential = FilesafeManager.get().filesafe.getDefaultCredentials();
     if(!credential) {
+      this.setState({status: null});
       alert("Please set up at least one key before attempting to upload a file. To do this, press Expand, and select Create New in the Keys section.");
       return;
     }
 
     const integration = FilesafeManager.get().filesafe.getDefaultIntegration();
     if(!integration) {
+      this.setState({status: null});
       alert("Please set up at least one integration before attempting to upload a file. To do this, press Expand, and select Add New in the Integrations section.");
       return;
     }
@@ -227,6 +225,9 @@ export default class UploadFilesView extends React.Component {
 
       return FilesafeManager.get().filesafe.uploadFile({fileItem, inputFileName, fileType, credential}).then(() => {
         this.setState({status: "Upload Success."});
+        setTimeout(() => {
+          this.setState({status: null});
+        }, 2000);
       }).catch((uploadError) => {
         console.error("fs-embed | error uploading file:", uploadError);
         this.flashError("Error uploading file.");

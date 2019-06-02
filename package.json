@@ -1,6 +1,6 @@
 {
   "name": "filesafe-embed",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "dist/dist.js",
   "author": "Standard Notes",
   "scripts": {
