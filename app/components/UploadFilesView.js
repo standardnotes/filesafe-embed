@@ -207,8 +207,6 @@ export default class UploadFilesView extends React.Component {
   }
 
   async encryptFile(data, inputFileName, fileType) {
-    this.setState({status: "Encrypting..."});
-
     const credential = FilesafeManager.get().filesafe.getDefaultCredentials();
     if(!credential) {
       alert("Please set up at least one key before attempting to upload a file. To do this, press Expand, and select Create New in the Keys section.");
@@ -220,6 +218,8 @@ export default class UploadFilesView extends React.Component {
       alert("Please set up at least one integration before attempting to upload a file. To do this, press Expand, and select Add New in the Integrations section.");
       return;
     }
+
+    this.setState({status: "Encrypting..."});
 
     return FilesafeManager.get().filesafe.encryptFile({data, inputFileName, fileType, credential}).then(async (fileItem) => {
       this.setState({status: `Uploading to ${FilesafeManager.get().filesafe.displayStringForIntegration(integration)}...`});

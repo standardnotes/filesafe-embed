@@ -1772,31 +1772,31 @@ function (_React$Component) {
           while (1) {
             switch (_context9.prev = _context9.next) {
               case 0:
-                this.setState({
-                  status: "Encrypting..."
-                });
                 credential = __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.getDefaultCredentials();
 
                 if (credential) {
-                  _context9.next = 5;
+                  _context9.next = 4;
                   break;
                 }
 
                 alert("Please set up at least one key before attempting to upload a file. To do this, press Expand, and select Create New in the Keys section.");
                 return _context9.abrupt("return");
 
-              case 5:
+              case 4:
                 integration = __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.getDefaultIntegration();
 
                 if (integration) {
-                  _context9.next = 9;
+                  _context9.next = 8;
                   break;
                 }
 
                 alert("Please set up at least one integration before attempting to upload a file. To do this, press Expand, and select Add New in the Integrations section.");
                 return _context9.abrupt("return");
 
-              case 9:
+              case 8:
+                this.setState({
+                  status: "Encrypting..."
+                });
                 return _context9.abrupt("return", __WEBPACK_IMPORTED_MODULE_13__lib_FilesafeManager__["a" /* default */].get().filesafe.encryptFile({
                   data: data,
                   inputFileName: inputFileName,
