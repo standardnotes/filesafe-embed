@@ -31,7 +31,7 @@ export default class FilesView extends React.Component {
     this.setState({fileStatusFile: file, fileStatus: status, hasStatusSpinner: hasSpinner});
   }
 
-  decryptFile = async (fileDescriptor) => {
+  decryptFileDescriptor = async (fileDescriptor) => {
     let integration = FilesafeManager.get().filesafe.integrationForFileDescriptor(fileDescriptor);
     if(!integration) {
       alert(`Unable to find integration for file. If you have deleted the integration, please re-add it and try again.`);
@@ -50,11 +50,11 @@ export default class FilesView extends React.Component {
         };
       }).catch((decryptionError) => {
         console.error("filesafe-embed | error decrypting file:", decryptionError);
-        this.flashError("Error decrypting file.");
+        this.flashErrorForFileDescriptor(fileDescriptor, "Error decrypting file.");
       })
     }).catch((downloadError) => {
-      console.log("Error downloading file", downloadError);
-      this.flashError("Error downloading file.");
+      console.error("Error downloading file", downloadError);
+      this.flashErrorForFileDescriptor(fileDescriptor, "Error downloading file.");
     })
   }
 
@@ -66,14 +66,18 @@ export default class FilesView extends React.Component {
       return;
     }
 
-    let fileData = await this.decryptFile(fileDescriptor);
+    let fileData = await this.decryptFileDescriptor(fileDescriptor);
+    if(!fileData) {
+      console.error("decryptFile returned nil data");
+      return;
+    }
     FilesafeManager.get().filesafe.downloadBase64Data(fileData);
     this.setStatusForFile(fileDescriptor, null);
   }
 
   previewFile = async (fileDescriptor) => {
     // Only supported on web, and not mobile or desktop. Preview button is not rendered on those platforms.
-    let fileData = await this.decryptFile(fileDescriptor);
+    let fileData = await this.decryptFileDescriptor(fileDescriptor);
     let url = FilesafeManager.get().filesafe.createTemporaryFileUrl({base64Data: fileData.base64Data, dataType: fileData.fileType});
     this.setStatusForFile(fileDescriptor, null);
     this.setState({previewUrl: url, previewingFile: fileDescriptor});
@@ -110,8 +114,8 @@ export default class FilesView extends React.Component {
     this.setState({previewUrl: null, previewingFile: null});
   }
 
-  flashError(error) {
-    this.setStatusForFile(error, false);
+  flashErrorForFileDescriptor(fileDescriptor, error) {
+    this.setStatusForFile(fileDescriptor, error, false);
     setTimeout(() => {
       this.setStatusForFile(null);
     }, 2500);

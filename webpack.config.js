@@ -2,13 +2,15 @@ const webpack = require('webpack');
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const uglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 module.exports = {
   entry: {
     "dist.js" : path.resolve(__dirname, 'app/main.js'),
     "dist.min.js" : path.resolve(__dirname, 'app/main.js'),
     "dist.css" : path.resolve(__dirname, 'app/stylesheets/main.scss'),
+  },
+  optimization: {
+    minimize: true
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -32,7 +34,7 @@ module.exports = {
     }
   },
   module: {
-    loaders: [
+    rules: [
       { test: /\.css$/, include: path.resolve(__dirname, 'app'), loader: 'style-loader!css-loader' },
       {
         test: /\.scss$/,
@@ -72,10 +74,6 @@ module.exports = {
     },
 
     new ExtractTextPlugin({ filename: './dist.css', disable: false, allChunks: true}),
-    new uglifyJsPlugin({
-      include: /\.min\.js$/,
-      minimize: true
-    }),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production')

@@ -165,14 +165,14 @@ export default class UploadFilesView extends React.Component {
     }
   }
 
-  async decryptDraggedFile(fileDescriptor) {
+  async decryptDraggedFile(fileItem) {
     this.setState({status: "Decrypting..."});
 
     const credentials = FilesafeManager.get().filesafe.getAllCredentials();
 
     let decryptWithCredential = async (credential) => {
       return new Promise((resolve, reject) => {
-        FilesafeManager.get().filesafe.decryptFile({fileDescriptor, credential}).then((data) => {
+        FilesafeManager.get().filesafe.decryptFile({fileItem, credential}).then((data) => {
           const item = data.decryptedItem;
           FilesafeManager.get().filesafe.downloadBase64Data({base64Data: data.decryptedData, fileName: item.content.fileName, fileType: item.content.fileType});
           this.setState({status: null});
