@@ -92,7 +92,7 @@ export default class IntegrationsView extends React.Component {
           {this.state.showInputForm &&
             <div className="sk-notification info">
               <strong>New Integration</strong>
-              <p className="sk-p">A new browser tab has opened---if not, try <a href={FilesafeManager.get().defaultRelayServerUrl()} target="_blank">this link</a>. Please complete the authentication flow and enter the code you receive below.</p>
+              <p className="sk-p">A new browser tab has opened&mdash;if not, try <a href={FilesafeManager.get().defaultRelayServerUrl()} target="_blank">this link</a>. Complete the authentication flow and enter the code you receive below.</p>
               <div className="sk-panel-row"></div>
               <input
                 className="title sk-input contrast"
