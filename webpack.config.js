@@ -79,9 +79,11 @@ module.exports = {
         NODE_ENV: JSON.stringify('production')
       }
     }),
-    new CopyWebpackPlugin([
-      { from: './app/index.html', to: 'index.html' },
-      { from: './app/index.min.html', to: 'index.min.html' }
-    ])
-  ]
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: './app/index.html', to: 'index.html' },
+        { from: './app/index.min.html', to: 'index.min.html' }
+      ],
+    }),
+  ],
 };
