@@ -10,7 +10,7 @@ export default class Root extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasLegacyAccess: false
+      hasLegacyAccess: FilesafeManager.get().filesafe.hasLegacyAccess()
     };
 
     FilesafeManager.get().addDataChangeObserver(() => {
@@ -28,9 +28,9 @@ export default class Root extends React.Component {
         <div id="home" className={"sk-panel static"}>
           <div id="main-content" className="sk-panel-content">
             <div className="sk-panel-section">
-              <div class="sk-notification danger">
-                <div class="sk-notification-title">Deprecated</div>
-                <div class="sk-notification-text">
+              <div className="sk-notification danger">
+                <div className="sk-notification-title">Deprecated</div>
+                <div className="sk-notification-text">
                   <p className="sk-p">FileSafe is deprecated and no longer offered to new users as of February 9th, 2022.</p>
                   <p className="sk-p">Existing users who have the extension installed, will continue to have access to it indefinitely.</p>
                 </div>
