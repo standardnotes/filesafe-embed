@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Root from './components/Root';
 import FilesafeManager from "./lib/FilesafeManager"
 
-export default class FilesafeEmbed extends React.Component {
+export class FilesafeEmbed extends React.Component {
 
   // Called by consumer
   static renderInElement(element, filesafe, delegate) {

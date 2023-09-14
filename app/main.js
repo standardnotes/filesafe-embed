@@ -1,5 +1,3 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import FilesafeEmbed from './FilesafeEmbed';
-
-export default {FilesafeEmbed: FilesafeEmbed, React: React, ReactDOM: ReactDOM}
+export { React } from "react"
+export { ReactDOM } from "react-dom"
+export { FilesafeEmbed } from "./FilesafeEmbed"
